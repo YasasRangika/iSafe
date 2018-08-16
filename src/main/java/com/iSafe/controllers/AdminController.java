@@ -59,7 +59,7 @@ public class AdminController {
 		}
 	}
 
-	// ----------------------Speed Limit(start)-------------------------------//
+	// -----------------------Speed Limit(start)--------------------------------//
 
 	@Autowired
 	RecordService speedLimitService;
