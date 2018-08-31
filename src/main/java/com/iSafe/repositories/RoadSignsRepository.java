@@ -21,6 +21,6 @@ public interface RoadSignsRepository extends CrudRepository<RoadSigns, Long> {
 	@Query("delete from RoadSigns where latitude=?1 and longitude=?2")
 	public void deleteRecord(double lat, double lng);
 	
-	@Query("select r, (6371 * acos (cos ( radians(?1) ) * cos(radians(latitude)) * cos(radians(longitude) - radians(?2)) + sin (radians(?1)) * sin(radians(latitude)))) from RoadSigns r where isConfirmed=1 and (6371 * acos (cos ( radians(?1) ) * cos(radians(latitude)) * cos(radians(longitude) - radians(?2)) + sin (radians(?1)) * sin(radians(latitude)))) <= ?3")
+	@Query("select r from RoadSigns r where isConfirmed=1 and (6371 * acos (cos ( radians(?1) ) * cos(radians(latitude)) * cos(radians(longitude) - radians(?2)) + sin (radians(?1)) * sin(radians(latitude)))) <= ?3") //, (6371 * acos (cos ( radians(?1) ) * cos(radians(latitude)) * cos(radians(longitude) - radians(?2)) + sin (radians(?1)) * sin(radians(latitude))))
 	public List<RoadSigns> findByRadius(double lat, double lng, double radius);
 }

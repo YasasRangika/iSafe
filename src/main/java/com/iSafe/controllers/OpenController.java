@@ -9,6 +9,7 @@ import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -30,6 +31,7 @@ import com.iSafe.models.UserDTO;
 import com.iSafe.services.KeycloakService;
 import com.iSafe.services.RecordService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/open")
 public class OpenController {
@@ -143,10 +145,13 @@ public class OpenController {
 	@PostMapping("/find/roadsign")
 	public ResponseEntity<?> getRaodSigns(@RequestBody RecordDto roadSignsDto, HttpServletRequest request) {
 		List<RoadSigns> roadSignsDto2 = roadSignService.getRoadSign(roadSignsDto);
-
+//		System.out.println("Point 1");
 		if (roadSignsDto2.size() > 0) {
-			return new ResponseEntity<Object>(roadSignsDto2, HttpStatus.ACCEPTED);
+//			System.out.println("Point 2");
+			return new ResponseEntity<Object>(roadSignsDto2, HttpStatus.OK);
+			//return ResponseEntity.ok(roadSignsDto2);
 		} else {
+//			System.out.println("Point 3");
 			return new ResponseEntity<Object>("No matches!", HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -161,7 +166,7 @@ public class OpenController {
 	public ResponseEntity<?> findIncident(@RequestBody RecordDto incidentDto, HttpServletRequest request) {
 		List<Accident> incidentDto2 = incidentService.getIncident(incidentDto);
 		if (incidentDto2.size() > 0) {
-			return new ResponseEntity<Object>(incidentDto2, HttpStatus.ACCEPTED);
+			return new ResponseEntity<Object>(incidentDto2, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Object>("No matches!", HttpStatus.BAD_REQUEST);
 		}
@@ -177,7 +182,7 @@ public class OpenController {
 	public ResponseEntity<?> findRecordsOnPath(@RequestBody RecordDto latLngDto, HttpServletRequest request) {
 		RecordDto recordsOnPathDto = recordOnPathService.updateMap(latLngDto);
 		if (recordsOnPathDto.getSelf() == "Exists") {
-			return new ResponseEntity<Object>("Found!", HttpStatus.ACCEPTED);
+			return new ResponseEntity<Object>("Found!", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Object>("No matches!", HttpStatus.BAD_REQUEST);
 		}
@@ -196,7 +201,7 @@ public class OpenController {
 		List<BlackSpot> blackSpotDto2 = blackSpotService.getBlackSpot(blackSpotDto);
 
 		if (blackSpotDto2.size() > 0) {
-			return new ResponseEntity<Object>(blackSpotDto2, HttpStatus.ACCEPTED);
+			return new ResponseEntity<Object>(blackSpotDto2, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Object>("No matches!", HttpStatus.BAD_REQUEST);
 		}
@@ -214,7 +219,7 @@ public class OpenController {
 		List<CriticalPoint> criticalPointDto2 = criticalPointService.getCriticalPoint(criticalPointDto);
 
 		if (criticalPointDto2.size() > 0) {
-			return new ResponseEntity<Object>(criticalPointDto2, HttpStatus.ACCEPTED);
+			return new ResponseEntity<Object>(criticalPointDto2, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Object>("No matches!", HttpStatus.BAD_REQUEST);
 		}
@@ -232,7 +237,7 @@ public class OpenController {
 		List<SpeedLimit> speedLimitDto2 = speedLimitService.getSpeedLimitPoint(speedLimitDto);
 
 		if (speedLimitDto2.size() > 0) {
-			return new ResponseEntity<Object>(speedLimitDto2, HttpStatus.ACCEPTED);
+			return new ResponseEntity<Object>(speedLimitDto2, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Object>("No matches!", HttpStatus.BAD_REQUEST);
 		}
@@ -243,10 +248,10 @@ public class OpenController {
 	RecordService recordService;
 
 	@PostMapping("/find/recordsonpath")
-	public ResponseEntity<?> getrecordsOnPath(@RequestBody RecordDto[] recordDto, HttpServletRequest request) {
+	public ResponseEntity<?> getrecordsOnPath(@RequestBody List<RecordDto> recordDto, HttpServletRequest request) {
 
 		RecordsOnPathDto list = recordService.pointsOnRoad(recordDto);
 
-		return new ResponseEntity<Object>(list, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Object>(list, HttpStatus.OK);
 	}
 }

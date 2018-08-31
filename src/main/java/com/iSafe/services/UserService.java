@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.iSafe.entities.User;
+import com.iSafe.models.UserDTO;
 import com.iSafe.repositories.UserRepo;
 
 @Service
@@ -30,5 +31,22 @@ public class UserService {
 	
 	public void deleteUser(User user) {
 		userRepo.delete(user);
+	}
+	
+	public List<User> getNotConfirmedUsers(){
+		List<User> usr = userRepo.notConfirmed();
+//		System.out.println("Done");
+//		for(User u:usr) {
+//			System.out.println(u);
+//		}
+		return usr;
+	}
+	
+	@Autowired
+	KeycloakService keycloakService;
+	public boolean confirmUser(UserDTO userDTO) {
+//		System.out.println(userDTO.getKid());
+		boolean status = keycloakService.confirmUser(userDTO.getKid());
+		return status;
 	}
 }

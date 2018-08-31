@@ -165,18 +165,19 @@ public class RecordService {
 		}
 	}
 
-	public RecordsOnPathDto pointsOnRoad(RecordDto[] recordDtos) {
+	public RecordsOnPathDto pointsOnRoad(List<RecordDto> recordDtos) {
 
 		RecordsOnPathDto recordsOnPathDto = new RecordsOnPathDto();
-		List<Accident> acc = new ArrayList<>();
+		
+//		List<Accident> acc = new ArrayList<>();
 		List<BlackSpot> blc = new ArrayList<>();
 		List<CriticalPoint> crtcl = new ArrayList<>();
 		List<RoadSigns> rdsign = new ArrayList<>();
 		List<SpeedLimit> spd = new ArrayList<>();
 
 		for (RecordDto recordDto : recordDtos) {
-			if (accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()) != null)
-				acc.add(accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()));
+//			if (accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()) != null)
+//				acc.add(accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()));
 			if (blackSpotRepository.findBlackSpot(recordDto.getLatitude(), recordDto.getLongitude()) != null)
 				blc.add(blackSpotRepository.findBlackSpot(recordDto.getLatitude(), recordDto.getLongitude()));
 			if (criticalPointRepository.findCriticalPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null)
@@ -186,8 +187,8 @@ public class RecordService {
 			if (speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null)
 				spd.add(speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(), recordDto.getLongitude()));
 		}
-		if (acc != null)
-			recordsOnPathDto.setAccidents(acc);
+//		if (acc != null)
+//			recordsOnPathDto.setAccidents(acc);
 		if (blc != null)
 			recordsOnPathDto.setBlackSpots(blc);
 		if (crtcl != null)

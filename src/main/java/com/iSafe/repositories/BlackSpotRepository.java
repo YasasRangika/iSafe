@@ -12,7 +12,7 @@ public interface BlackSpotRepository extends CrudRepository<BlackSpot, Long> {
 	@Query("select b from BlackSpot b where (6371 * acos (cos ( radians(?1) ) * cos(radians(latitude)) * cos(radians(longitude) - radians(?2)) + sin (radians(?1)) * sin(radians(latitude)))) <= 0.001")
 	public BlackSpot findBlackSpot(double latitude, double longitude);
 	
-	@Query("select b, (6371 * acos (cos ( radians(?1) ) * cos(radians(latitude)) * cos(radians(longitude) - radians(?2)) + sin (radians(?1)) * sin(radians(latitude)))) from BlackSpot b where (6371 * acos (cos ( radians(?1) ) * cos(radians(latitude)) * cos(radians(longitude) - radians(?2)) + sin (radians(?1)) * sin(radians(latitude)))) <= ?3")
+	@Query("select b from BlackSpot b where (6371 * acos (cos ( radians(?1) ) * cos(radians(latitude)) * cos(radians(longitude) - radians(?2)) + sin (radians(?1)) * sin(radians(latitude)))) <= ?3")
 	public List<BlackSpot> findByRadius(double lat, double lng, double radius);
 	
 //	@Query("select b from BlackSpot b where b.blackSpotId=?1")

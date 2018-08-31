@@ -2,7 +2,7 @@ package com.iSafe.models;
 
 import java.util.List;
 
-import com.iSafe.entities.Accident;
+//import com.iSafe.entities.Accident;
 import com.iSafe.entities.BlackSpot;
 import com.iSafe.entities.CriticalPoint;
 import com.iSafe.entities.RoadSigns;
@@ -10,17 +10,18 @@ import com.iSafe.entities.SpeedLimit;
 
 public class RecordsOnPathDto {
 
-	private List<Accident> accidents;
+	//private List<Accident> accidents;
 	private List<BlackSpot> blackSpots;
 	private List<CriticalPoint> criticalPoints;
 	private List<RoadSigns> roadSigns;
 	private List<SpeedLimit> speedLimits;
-	public List<Accident> getAccidents() {
-		return accidents;
-	}
-	public void setAccidents(List<Accident> accidents) {
-		this.accidents = accidents;
-	}
+	
+//	public List<Accident> getAccidents() {
+//		return accidents;
+//	}
+//	public void setAccidents(List<Accident> accidents) {
+//		this.accidents = accidents;
+//	}
 	public List<BlackSpot> getBlackSpots() {
 		return blackSpots;
 	}

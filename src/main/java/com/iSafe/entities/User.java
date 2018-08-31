@@ -26,6 +26,8 @@ public class User {
 	private String address;
 	@NotNull
 	private Date dob;
+	@NotNull
+	private int isConfirmed;
 	
 	@NotNull
 	private String licenseUrl;
@@ -132,6 +134,14 @@ public class User {
 
 	public void setKeycloakId(String keycloakId) {
 		this.keycloakId = keycloakId;
+	}
+
+	public int getIsConfirmed() {
+		return isConfirmed;
+	}
+
+	public void setIsConfirmed(int isConfirmed) {
+		this.isConfirmed = isConfirmed;
 	}
 	
 	

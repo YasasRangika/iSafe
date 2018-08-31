@@ -1,11 +1,14 @@
 package com.iSafe.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 //import org.keycloak.KeycloakPrincipal;
 //import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,11 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 //import org.springframework.web.context.request.RequestContextHolder;
 //import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.iSafe.entities.User;
 import com.iSafe.models.RecordDto;
 import com.iSafe.models.UserDTO;
 import com.iSafe.services.KeycloakService;
 import com.iSafe.services.RecordService;
+import com.iSafe.services.UserService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -75,5 +81,25 @@ public class AdminController {
 			return new ResponseEntity<Object>("Speed Limit added!", HttpStatus.CREATED);
 		}
 
+	}
+	
+	@Autowired
+	UserService userService;
+	
+	@PostMapping("/notConfirmedUsers")
+	public ResponseEntity<?> getNotConfirmedUsers(){
+		List<User> user = userService.getNotConfirmedUsers();
+		if(user.isEmpty())
+			return new ResponseEntity<Object>("Task Failed", HttpStatus.BAD_REQUEST);
+		else
+			return new ResponseEntity<Object>(user, HttpStatus.OK);
+	}
+	
+	@PostMapping("/confirmUser")
+	public ResponseEntity<?> confirmAUser(@RequestBody UserDTO userDTO, HttpServletRequest request){
+		if(userService.confirmUser(userDTO)) {
+			return new ResponseEntity<Object>("successfully confirmed!!",HttpStatus.OK);
+		}else
+			return new ResponseEntity<Object>("Error occured while confirming!!!", HttpStatus.BAD_REQUEST);
 	}
 }

@@ -21,6 +21,6 @@ public interface AccidentRepository extends CrudRepository<Accident, Long> {
 	@Query("delete from Accident where lat=?1 and lng=?2")
 	public void deleteRecord(double lat, double lng);
 	
-	@Query("select a, (6371 * acos (cos ( radians(?1) ) * cos(radians(lat)) * cos(radians(lng) - radians(?2)) + sin (radians(?1)) * sin(radians(lat)))) from Accident a where isConfirmed=1 and (6371 * acos (cos ( radians(?1) ) * cos(radians(lat)) * cos(radians(lng) - radians(?2)) + sin (radians(?1)) * sin(radians(lat)))) <= ?3")
+	@Query("select a from Accident a where isConfirmed=1 and (6371 * acos (cos ( radians(?1) ) * cos(radians(lat)) * cos(radians(lng) - radians(?2)) + sin (radians(?1)) * sin(radians(lat)))) <= ?3")
 	public List<Accident> findByRadius(double lat, double lng, double radius);
 }

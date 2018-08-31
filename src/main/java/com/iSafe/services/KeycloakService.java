@@ -45,16 +45,16 @@ public class KeycloakService {
 
 	@Value("${keycloak.realm}")
 	private String REALM;
-	
+
 //	@Value("${mykeycloak.user}")
 //	private String USER;
 //	
 //	@Value("${mykeycloak.password}")
 //	private String PASSWORD;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	public String getToken(UserCredential userCredential) {
 		String responseToken = null;
 		try {
@@ -67,17 +67,17 @@ public class KeycloakService {
 			urlParameters.add(new BasicNameValuePair("username", username));
 			urlParameters.add(new BasicNameValuePair("password", userCredential.getPassword()));
 			urlParameters.add(new BasicNameValuePair("client_secret", SECRETKEY));
-			
+
 			responseToken = sendPost(urlParameters);
 			System.out.println(responseToken);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//UserRepresentation user
+		// UserRepresentation user
 		return responseToken;
 
 	}
-	
+
 	public String getByRefreshToken(String refreshToken) {
 
 		String responseToken = null;
@@ -98,7 +98,7 @@ public class KeycloakService {
 
 		return responseToken;
 	}
-	
+
 	private String sendPost(List<NameValuePair> urlParameters) throws Exception {
 
 		HttpClient client = HttpClientBuilder.create().build();
@@ -118,7 +118,7 @@ public class KeycloakService {
 
 		return result.toString();
 	}
-	
+
 	public int createUserInKeyCloak(UserDTO userDTO) {
 
 		int statusId = 0;
@@ -131,7 +131,7 @@ public class KeycloakService {
 			user.setEmail(userDTO.getEmail());
 			user.setFirstName(userDTO.getFirstName());
 			user.setLastName(userDTO.getLastName());
-			
+
 			user.setEnabled(false);
 
 //			//user.setA
@@ -139,7 +139,7 @@ public class KeycloakService {
 //			
 			// Create user
 			Response result = userRessource.create(user);
-			
+
 			System.out.println("iSafe Keycloak create user response code>>>>" + result.getStatus());
 
 			statusId = result.getStatus();
@@ -148,11 +148,9 @@ public class KeycloakService {
 
 				String userId = result.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
 
-				System.out.println("iSafe User created with u\n" + 
-						"\n" + 
-						"import og.api.document.UserDoc;serId:" + userId);
+				System.out.println(
+						"iSafe User created with u\n" + "\n" + "import og.api.document.UserDoc;serId:" + userId);
 
-				
 				User user2 = new User();
 				user2.setKeycloakId(userId);
 				user2.setUsername(userDTO.getUsername());
@@ -165,8 +163,10 @@ public class KeycloakService {
 				user2.setDateOfIssueLicense(userDTO.getDateOfIssueLicense());
 				user2.setDateOfExpireLicense(userDTO.getDateOfExpireLicense());
 				user2.setImageOfDriverUrl(userDTO.getImageOfDriverUrl());
+				user2.setIsConfirmed(0);
+
 				userService.saveUser(user2);
-				
+
 				// Define password credential
 				CredentialRepresentation passwordCred = new CredentialRepresentation();
 				passwordCred.setTemporary(false);
@@ -201,7 +201,27 @@ public class KeycloakService {
 		return statusId;
 
 	}
-	
+
+	public boolean confirmUser(String id) {
+
+		UsersResource userRessource = getKeycloakUserResource();
+		UserRepresentation user = new UserRepresentation();
+//		System.out.println(id);
+		
+		try {
+//			System.out.println("point 1");
+//			user = userRessource.get("10a933b5-a3f9-4235-98c1-f45d0d05ef7f").toRepresentation();
+//			System.out.println("point 2");
+			user.setEnabled(true);
+			userRessource.get(id).update(user);
+			return true;
+		} catch (Exception ex) {
+//			System.out.println(ex);
+			return false;
+		}
+
+	}
+
 	public int createAdminUser(UserDTO userDTO) {
 
 		int statusId = 0;
@@ -216,12 +236,12 @@ public class KeycloakService {
 			user.setLastName(userDTO.getLastName());
 			user.setEnabled(true);
 
-			//user.setA
+			// user.setA
 			user.setEnabled(true);
-			
+
 			// Create user
 			Response result = userRessource.create(user);
-			
+
 			System.out.println("iSafe Keycloak create user response code>>>>" + result.getStatus());
 
 			statusId = result.getStatus();
@@ -238,7 +258,7 @@ public class KeycloakService {
 				user2.setEmail(userDTO.getEmail());
 				user2.setPhonenumber(userDTO.getPhonenumber());
 				userService.saveUser(user2);
-				
+
 				// Define password credential
 				CredentialRepresentation passwordCred = new CredentialRepresentation();
 				passwordCred.setTemporary(false);
@@ -246,7 +266,7 @@ public class KeycloakService {
 				passwordCred.setValue(userDTO.getPassword());
 
 				// Set password credential
-				
+
 				userRessource.get(userId).resetPassword(passwordCred);
 
 				// set role
@@ -254,7 +274,8 @@ public class KeycloakService {
 				RoleRepresentation savedRoleRepresentation = realmResource.roles().get("admin").toRepresentation();
 				realmResource.users().get(userId).roles().realmLevel().add(Arrays.asList(savedRoleRepresentation));
 
-				System.out.println("Username==" + userDTO.getUsername() + " created admin in iSafe keycloak successfully");
+				System.out.println(
+						"Username==" + userDTO.getUsername() + " created admin in iSafe keycloak successfully");
 
 			}
 
@@ -262,7 +283,8 @@ public class KeycloakService {
 				System.out.println("Username==" + userDTO.getUsername() + " admin already present in iSafe keycloak");
 
 			} else {
-				System.out.println("Username==" + userDTO.getUsername() + " admin could not be created in iSafe keycloak");
+				System.out.println(
+						"Username==" + userDTO.getUsername() + " admin could not be created in iSafe keycloak");
 
 			}
 
@@ -274,7 +296,7 @@ public class KeycloakService {
 		return statusId;
 
 	}
-	
+
 	protected UsersResource getKeycloakUserResource() {
 
 		Keycloak kc = KeycloakBuilder.builder().serverUrl(AUTHURL).realm("master").username("Yasas").password("yasas")
@@ -302,12 +324,12 @@ public class KeycloakService {
 			userRessource.get(userDoc.getKeycloakId()).remove();
 			userService.deleteUser(userDoc);
 			return createUserInKeyCloak(userDTO);
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			return 409;
 		}
-		
+
 	}
-	
+
 	// Reset password
 	public void resetPassword(String newPassword, String userId) {
 
@@ -323,7 +345,7 @@ public class KeycloakService {
 		userResource.get(userId).resetPassword(passwordCred);
 
 	}
-	
+
 	private RealmResource getRealmResource() {
 
 		Keycloak kc = KeycloakBuilder.builder().serverUrl(AUTHURL).realm("master").username("Yasas").password("yasas")
