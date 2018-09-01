@@ -37,7 +37,7 @@ public class User {
 	private Date dateOfExpireLicense;
 	@NotNull
 	private String imageOfDriverUrl;
-	
+	@NotNull
 	private String keycloakId;
 
 	public long getId() {

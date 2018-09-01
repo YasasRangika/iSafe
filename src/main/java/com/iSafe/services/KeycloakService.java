@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 import com.iSafe.entities.User;
 import com.iSafe.models.UserCredential;
 import com.iSafe.models.UserDTO;
+import com.iSafe.repositories.UserRepo;
 
 @Component
 public class KeycloakService {
@@ -202,6 +203,9 @@ public class KeycloakService {
 
 	}
 
+	@Autowired
+	UserRepo userRepo;
+	
 	public boolean confirmUser(String id) {
 
 		UsersResource userRessource = getKeycloakUserResource();
@@ -213,7 +217,12 @@ public class KeycloakService {
 //			user = userRessource.get("10a933b5-a3f9-4235-98c1-f45d0d05ef7f").toRepresentation();
 //			System.out.println("point 2");
 			user.setEnabled(true);
+			user.setEmailVerified(true);
 			userRessource.get(id).update(user);
+//			System.out.println("point 1");
+			System.out.println(id);
+			userRepo.confirmUser(id);
+//			System.out.println("point 2");
 			return true;
 		} catch (Exception ex) {
 //			System.out.println(ex);

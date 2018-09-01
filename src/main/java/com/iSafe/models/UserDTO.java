@@ -25,6 +25,7 @@ public class UserDTO {
 	private String imageOfDriverUrl;
 	
 	private String kid;
+	private int isConfirmed;
 
 	public String getUsername() {
 		return username;
@@ -144,6 +145,14 @@ public class UserDTO {
 
 	public void setRoles(Set<String> roles) {
 		this.roles = roles;
+	}
+
+	public int getIsConfirmed() {
+		return isConfirmed;
+	}
+
+	public void setIsConfirmed(int isConfirmed) {
+		this.isConfirmed = isConfirmed;
 	}
 	
 	

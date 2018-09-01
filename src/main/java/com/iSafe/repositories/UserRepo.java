@@ -2,6 +2,9 @@ package com.iSafe.repositories;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -16,4 +19,9 @@ public interface UserRepo extends CrudRepository<User, Long> {
 	
 	@Query("select u from User u where u.isConfirmed=0")
 	public List<User> notConfirmed();
+	
+	@Modifying
+	@Transactional
+	@Query("update User set isConfirmed=1 where keycloakId=?1")
+	public void confirmUser(String id);
 }
