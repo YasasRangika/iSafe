@@ -34,35 +34,37 @@ public class RecordService {
 	@Autowired
 	private SpeedLimitRepository speedLimitRepository;
 
-	public int confirmOrDeleteAccident(RecordDto recordDto) {
+	public int confirmOrDeleteAccident(RecordDto recordDto, UserDTO userDTO) {
 		if (accidentRepository.findByLatLanNotConfirmed(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
 			if (recordDto.getIsConfirmed() == 1) {
-				accidentRepository.confirmRecord();
-				return 1;
+				accidentRepository.confirmRecord(recordDto.getLatitude(), recordDto.getLongitude(), userDTO.getKid());
+				return 200;
 			} else {
 				accidentRepository.deleteRecord(recordDto.getLatitude(), recordDto.getLongitude());
-				return 2;
+				return 201;
 			}
 		} else {
-			return 0;
+			return 208;
 		}
 	}
 
-	public int confirmOrDeleteRoadSign(RecordDto recordDto) {
-		System.out.println("Line 0");
+	public int confirmOrDeleteRoadSign(RecordDto recordDto, UserDTO userDTO) {
+//		System.out.println("Line 0");
 		if (roadSignsRepository.findByLatLanNotConfirmed(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
-			System.out.println("Line 1");
+//			System.out.println("Line 1");
 			if (recordDto.getIsConfirmed() == 1) {
-				System.out.println("Line 2");
-				roadSignsRepository.confirmRecord(recordDto.getLatitude(), recordDto.getLongitude());
+//				System.out.println("Line 2");
+//				System.out.println(userDTO.getKid());
+				roadSignsRepository.confirmRecord(recordDto.getLatitude(), recordDto.getLongitude(), userDTO.getKid());
+//				System.out.println(userDTO.getKid());
 				return 200;
 			} else {
-				System.out.println("Line 3");
+//				System.out.println("Line 3");
 				roadSignsRepository.deleteRecord(recordDto.getLatitude(), recordDto.getLongitude());
 				return 201;
 			}
 		} else {
-			System.out.println("Line 4");
+//			System.out.println("Line 4");
 			return 208;
 		}
 	}
@@ -150,6 +152,23 @@ public class RecordService {
 		}
 	}
 
+	public boolean recordBlackSpot(RecordDto incidentDto) {
+
+		BlackSpot blackSpot = new BlackSpot();
+
+		blackSpot.setLatitude(incidentDto.getLatitude());
+		blackSpot.setLongitude(incidentDto.getLongitude());
+		blackSpot.setRadius(incidentDto.getRadius());
+		blackSpot.setMessage(incidentDto.getMessage());
+
+		if (blackSpotRepository.findBlackSpot(blackSpot.getLatitude(), blackSpot.getLongitude()) == null) {
+			blackSpotRepository.save(blackSpot);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public List<Accident> getIncident(RecordDto incidentDto) {
 
 		List<Accident> incident = new ArrayList<Accident>();
@@ -201,41 +220,41 @@ public class RecordService {
 		return recordsOnPathDto;
 	}
 
-	public RecordDto updateMap(RecordDto latLngDto) {
-
-		RecordDto recordsOnPathDto = new RecordDto();
-		Accident incident = new Accident();
-		RoadSigns roadSigns = new RoadSigns();
-		BlackSpot blackSpot = new BlackSpot();
-		CriticalPoint criticalPoint = new CriticalPoint();
-		SpeedLimit speedLimit = new SpeedLimit();
-
-		if (roadSignsRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
-				| accidentRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
-				| blackSpotRepository.findBlackSpot(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
-				| criticalPointRepository.findCriticalPoint(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
-				| speedLimitRepository.findSpeedLimitPoint(latLngDto.getLatitude(), latLngDto.getLongitude()) != null) {
-
-			recordsOnPathDto.setSelf("Exists");
-			roadSigns = roadSignsRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude());
-			recordsOnPathDto.setRoadsigns(roadSigns);
-			incident = accidentRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude());
-			recordsOnPathDto.setIncident(incident);
-			blackSpot = blackSpotRepository.findBlackSpot(latLngDto.getLatitude(), latLngDto.getLongitude());
-			recordsOnPathDto.setBlackSpot(blackSpot);
-			criticalPoint = criticalPointRepository.findCriticalPoint(latLngDto.getLatitude(),
-					latLngDto.getLongitude());
-			recordsOnPathDto.setCriticalPoint(criticalPoint);
-			speedLimit = speedLimitRepository.findSpeedLimitPoint(latLngDto.getLatitude(), latLngDto.getLongitude());
-			recordsOnPathDto.setSpeedLimit(speedLimit);
-
-			return recordsOnPathDto;
-		} else {
-
-			recordsOnPathDto.setSelf("Error");
-			return recordsOnPathDto;
-		}
-	}
+//	public RecordDto updateMap(RecordDto latLngDto) {		//outdated!!!
+//
+//		RecordDto recordsOnPathDto = new RecordDto();
+//		Accident incident = new Accident();
+//		RoadSigns roadSigns = new RoadSigns();
+//		BlackSpot blackSpot = new BlackSpot();
+//		CriticalPoint criticalPoint = new CriticalPoint();
+//		SpeedLimit speedLimit = new SpeedLimit();
+//
+//		if (roadSignsRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
+//				| accidentRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
+//				| blackSpotRepository.findBlackSpot(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
+//				| criticalPointRepository.findCriticalPoint(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
+//				| speedLimitRepository.findSpeedLimitPoint(latLngDto.getLatitude(), latLngDto.getLongitude()) != null) {
+//
+//			recordsOnPathDto.setSelf("Exists");
+//			roadSigns = roadSignsRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude());
+//			recordsOnPathDto.setRoadsigns(roadSigns);
+//			incident = accidentRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude());
+//			recordsOnPathDto.setIncident(incident);
+//			blackSpot = blackSpotRepository.findBlackSpot(latLngDto.getLatitude(), latLngDto.getLongitude());
+//			recordsOnPathDto.setBlackSpot(blackSpot);
+//			criticalPoint = criticalPointRepository.findCriticalPoint(latLngDto.getLatitude(),
+//					latLngDto.getLongitude());
+//			recordsOnPathDto.setCriticalPoint(criticalPoint);
+//			speedLimit = speedLimitRepository.findSpeedLimitPoint(latLngDto.getLatitude(), latLngDto.getLongitude());
+//			recordsOnPathDto.setSpeedLimit(speedLimit);
+//
+//			return recordsOnPathDto;
+//		} else {
+//
+//			recordsOnPathDto.setSelf("Error");
+//			return recordsOnPathDto;
+//		}
+//	}
 
 	public List<BlackSpot> getBlackSpot(RecordDto blackSpotDto) {
 
@@ -360,5 +379,11 @@ public class RecordService {
 //
 //        return 12.742 * Math.asin(Math.sqrt(a))*1000*1000;
 //    }
+	
+
+	public List<Accident> getNotConfirmedAccidents(){
+		List<Accident> list = accidentRepository.findAllNotConfirmed();
+		return list;
+	}
 
 }

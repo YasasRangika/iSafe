@@ -129,7 +129,7 @@ public class UserController {
 
 	// ----------------------Critical Point(end)-------------------------------//
 
-	private UserDTO getTokenData(HttpServletRequest request) {
+	public UserDTO getTokenData(HttpServletRequest request) {
 		request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		AccessToken token = ((KeycloakPrincipal<?>) request.getUserPrincipal()).getKeycloakSecurityContext().getToken();
 		UserDTO userDTO = new UserDTO();

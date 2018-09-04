@@ -175,18 +175,18 @@ public class OpenController {
 
 	// ----------------------Records On Path(start)-------------------------------//
 
-	@Autowired
-	RecordService recordOnPathService;
-
-	@PostMapping("/find/records")
-	public ResponseEntity<?> findRecordsOnPath(@RequestBody RecordDto latLngDto, HttpServletRequest request) {
-		RecordDto recordsOnPathDto = recordOnPathService.updateMap(latLngDto);
-		if (recordsOnPathDto.getSelf() == "Exists") {
-			return new ResponseEntity<Object>("Found!", HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Object>("No matches!", HttpStatus.BAD_REQUEST);
-		}
-	}
+//	@Autowired
+//	RecordService recordOnPathService;
+//
+//	@PostMapping("/find/records")
+//	public ResponseEntity<?> findRecordsOnPath(@RequestBody RecordDto latLngDto, HttpServletRequest request) {
+//		RecordDto recordsOnPathDto = recordOnPathService.updateMap(latLngDto);
+//		if (recordsOnPathDto.getSelf() == "Exists") {
+//			return new ResponseEntity<Object>("Found!", HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<Object>("No matches!", HttpStatus.BAD_REQUEST);
+//		}
+//	}
 
 	// ----------------------Records On Path(end)-------------------------------//
 
