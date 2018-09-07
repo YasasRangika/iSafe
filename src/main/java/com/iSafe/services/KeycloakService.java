@@ -59,7 +59,7 @@ public class KeycloakService {
 	public String getToken(UserCredential userCredential) {
 		String responseToken = null;
 		try {
-
+//			System.out.println(userCredential.getPassword()+"  "+userCredential.getUsername());
 			String username = userCredential.getUsername();
 
 			List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
@@ -70,7 +70,7 @@ public class KeycloakService {
 			urlParameters.add(new BasicNameValuePair("client_secret", SECRETKEY));
 
 			responseToken = sendPost(urlParameters);
-			System.out.println(responseToken);
+//			System.out.println(responseToken);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -220,7 +220,7 @@ public class KeycloakService {
 			user.setEmailVerified(true);
 			userRessource.get(id).update(user);
 //			System.out.println("point 1");
-			System.out.println(id);
+//			System.out.println(id);
 			userRepo.confirmUser(id);
 //			System.out.println("point 2");
 			return true;
@@ -308,7 +308,7 @@ public class KeycloakService {
 
 	protected UsersResource getKeycloakUserResource() {
 
-		Keycloak kc = KeycloakBuilder.builder().serverUrl(AUTHURL).realm("master").username("Yasas").password("yasas")
+		Keycloak kc = KeycloakBuilder.builder().serverUrl(AUTHURL).realm("master").username("yasas").password("yasas")
 				.clientId("admin-cli").resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build())
 				.build();
 
@@ -357,7 +357,7 @@ public class KeycloakService {
 
 	private RealmResource getRealmResource() {
 
-		Keycloak kc = KeycloakBuilder.builder().serverUrl(AUTHURL).realm("master").username("Yasas").password("yasas")
+		Keycloak kc = KeycloakBuilder.builder().serverUrl(AUTHURL).realm("master").username("yasas").password("yasas")
 				.clientId("admin-cli").resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build())
 				.build();
 

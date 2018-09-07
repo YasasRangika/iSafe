@@ -1,6 +1,8 @@
 package com.iSafe.controllers;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.iSafe.models.RecordDto;
+import com.iSafe.models.SafestPathDto;
 import com.iSafe.models.UserDTO;
 import com.iSafe.services.KeycloakService;
 import com.iSafe.services.RecordService;
@@ -76,6 +79,21 @@ public class UserController {
 
 	@Autowired
 	RecordService tmpIncidentService;
+
+	@Autowired
+	RecordService recordService;
+
+	@PostMapping("/check/safestPath")
+	public ResponseEntity<?> safestPathOnly(@RequestBody List<List<RecordDto>> records, HttpServletRequest request) {
+		
+		List<SafestPathDto> safePath = new ArrayList<>();
+		
+		if(safePath.size() != 0) {
+			return new ResponseEntity<Object>(safePath, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<Object>("No Risks!", HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@PostMapping("/add/accident")
 	public ResponseEntity<?> incidentRecords(@RequestBody RecordDto incidentDto, HttpServletRequest request) {

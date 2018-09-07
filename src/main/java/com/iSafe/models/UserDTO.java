@@ -18,6 +18,7 @@ public class UserDTO {
 	private String address;
 	private Date dob;
 	private Set<String> roles;
+	private int points;
 	
 	private String licenseUrl;
 	private Date dateOfIssueLicense;
@@ -153,6 +154,14 @@ public class UserDTO {
 
 	public void setIsConfirmed(int isConfirmed) {
 		this.isConfirmed = isConfirmed;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
 	}
 	
 	

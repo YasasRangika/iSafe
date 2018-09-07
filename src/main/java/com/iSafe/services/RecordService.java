@@ -9,14 +9,17 @@ import org.springframework.stereotype.Service;
 import com.iSafe.entities.Accident;
 import com.iSafe.entities.BlackSpot;
 import com.iSafe.entities.CriticalPoint;
+import com.iSafe.entities.Point;
 import com.iSafe.entities.RoadSigns;
 import com.iSafe.entities.SpeedLimit;
 import com.iSafe.models.RecordDto;
 import com.iSafe.models.RecordsOnPathDto;
+import com.iSafe.models.SafestPathDto;
 import com.iSafe.models.UserDTO;
 import com.iSafe.repositories.AccidentRepository;
 import com.iSafe.repositories.BlackSpotRepository;
 import com.iSafe.repositories.CriticalPointRepository;
+import com.iSafe.repositories.PointsRepository;
 import com.iSafe.repositories.RoadSignsRepository;
 import com.iSafe.repositories.SpeedLimitRepository;
 
@@ -33,14 +36,76 @@ public class RecordService {
 	private BlackSpotRepository blackSpotRepository;
 	@Autowired
 	private SpeedLimitRepository speedLimitRepository;
+	@Autowired
+	private PointsRepository pointsRepository;
+
+	public List<SafestPathDto> findSafestPath(List<List<RecordDto>> points) {
+
+		List<SafestPathDto> safePath = new ArrayList<>();
+
+		for (List<RecordDto> record : points) {
+			RecordsOnPathDto recordsOnPathDto = this.pointsOnRoad(record);
+			SafestPathDto safestPathDto = new SafestPathDto();
+			safestPathDto.setBlackSpots(recordsOnPathDto.getBlackSpots().size());
+			safestPathDto.setCriticalPoints(recordsOnPathDto.getCriticalPoints().size());
+			safestPathDto.setPoints(record);
+			safestPathDto.setTotalRisks(
+					recordsOnPathDto.getBlackSpots().size() + recordsOnPathDto.getCriticalPoints().size());
+			safePath.add(safestPathDto);
+		}
+		return safePath;
+	}
+	
+
+	public RecordsOnPathDto pointsOnRoad(List<RecordDto> recordDtos) {
+
+		RecordsOnPathDto recordsOnPathDto = new RecordsOnPathDto();
+
+//		List<Accident> acc = new ArrayList<>();
+		List<BlackSpot> blc = new ArrayList<>();
+		List<CriticalPoint> crtcl = new ArrayList<>();
+		List<RoadSigns> rdsign = new ArrayList<>();
+		List<SpeedLimit> spd = new ArrayList<>();
+
+		for (RecordDto recordDto : recordDtos) {
+//			if (accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()) != null)
+//				acc.add(accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()));
+			if (blackSpotRepository.findBlackSpot(recordDto.getLatitude(), recordDto.getLongitude()) != null)
+				blc.add(blackSpotRepository.findBlackSpot(recordDto.getLatitude(), recordDto.getLongitude()));
+			if (criticalPointRepository.findCriticalPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null)
+				crtcl.add(criticalPointRepository.findCriticalPoint(recordDto.getLatitude(), recordDto.getLongitude()));
+			if (roadSignsRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()) != null)
+				rdsign.add(roadSignsRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()));
+			if (speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null)
+				spd.add(speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(), recordDto.getLongitude()));
+		}
+//		if (acc != null)
+//			recordsOnPathDto.setAccidents(acc);
+		if (blc != null)
+			recordsOnPathDto.setBlackSpots(blc);
+		if (crtcl != null)
+			recordsOnPathDto.setCriticalPoints(crtcl);
+		if (rdsign != null)
+			recordsOnPathDto.setRoadSigns(rdsign);
+		if (spd != null)
+			recordsOnPathDto.setSpeedLimits(spd);
+
+		return recordsOnPathDto;
+	}
 
 	public int confirmOrDeleteAccident(RecordDto recordDto, UserDTO userDTO) {
 		if (accidentRepository.findByLatLanNotConfirmed(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
+			Point p = pointsRepository.getPointsOfUser(userDTO.getKid());
 			if (recordDto.getIsConfirmed() == 1) {
 				accidentRepository.confirmRecord(recordDto.getLatitude(), recordDto.getLongitude(), userDTO.getKid());
+				pointsRepository.addPointsToUser(userDTO.getKid(), (p.getPoints() + 10));/// may be this will come
+																							/// directly with userID
+																							/// becouse record recording
+																							/// with userID who recorded
 				return 200;
 			} else {
 				accidentRepository.deleteRecord(recordDto.getLatitude(), recordDto.getLongitude());
+				pointsRepository.addPointsToUser(userDTO.getKid(), (p.getPoints() - 2));
 				return 201;
 			}
 		} else {
@@ -168,7 +233,7 @@ public class RecordService {
 			return false;
 		}
 	}
-	
+
 	public List<Accident> getIncident(RecordDto incidentDto) {
 
 		List<Accident> incident = new ArrayList<Accident>();
@@ -182,42 +247,6 @@ public class RecordService {
 		} else {
 			return incident;
 		}
-	}
-
-	public RecordsOnPathDto pointsOnRoad(List<RecordDto> recordDtos) {
-
-		RecordsOnPathDto recordsOnPathDto = new RecordsOnPathDto();
-		
-//		List<Accident> acc = new ArrayList<>();
-		List<BlackSpot> blc = new ArrayList<>();
-		List<CriticalPoint> crtcl = new ArrayList<>();
-		List<RoadSigns> rdsign = new ArrayList<>();
-		List<SpeedLimit> spd = new ArrayList<>();
-
-		for (RecordDto recordDto : recordDtos) {
-//			if (accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()) != null)
-//				acc.add(accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()));
-			if (blackSpotRepository.findBlackSpot(recordDto.getLatitude(), recordDto.getLongitude()) != null)
-				blc.add(blackSpotRepository.findBlackSpot(recordDto.getLatitude(), recordDto.getLongitude()));
-			if (criticalPointRepository.findCriticalPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null)
-				crtcl.add(criticalPointRepository.findCriticalPoint(recordDto.getLatitude(), recordDto.getLongitude()));
-			if (roadSignsRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()) != null)
-				rdsign.add(roadSignsRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()));
-			if (speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null)
-				spd.add(speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(), recordDto.getLongitude()));
-		}
-//		if (acc != null)
-//			recordsOnPathDto.setAccidents(acc);
-		if (blc != null)
-			recordsOnPathDto.setBlackSpots(blc);
-		if (crtcl != null)
-			recordsOnPathDto.setCriticalPoints(crtcl);
-		if (rdsign != null)
-			recordsOnPathDto.setRoadSigns(rdsign);
-		if (spd != null)
-			recordsOnPathDto.setSpeedLimits(spd);
-
-		return recordsOnPathDto;
 	}
 
 //	public RecordDto updateMap(RecordDto latLngDto) {		//outdated!!!
@@ -379,9 +408,8 @@ public class RecordService {
 //
 //        return 12.742 * Math.asin(Math.sqrt(a))*1000*1000;
 //    }
-	
 
-	public List<Accident> getNotConfirmedAccidents(){
+	public List<Accident> getNotConfirmedAccidents() {
 		List<Accident> list = accidentRepository.findAllNotConfirmed();
 		return list;
 	}
