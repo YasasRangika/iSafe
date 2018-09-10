@@ -13,7 +13,7 @@ import com.iSafe.entities.RoadSigns;
 public interface RoadSignsRepository extends CrudRepository<RoadSigns, Long> {
 	
 	@Query("select r from RoadSigns r where isConfirmed=1 and (6371 * acos (cos ( radians(?1) ) * cos(radians(latitude)) * cos(radians(longitude) - radians(?2)) + sin (radians(?1)) * sin(radians(latitude)))) <= 0.01")
-	public RoadSigns findByLatLan(double latitude, double longitude);
+	public List<RoadSigns> findByLatLan(double latitude, double longitude);
 	
 	@Query("select r from RoadSigns r where r.isConfirmed=0 and r.latitude=?1 and r.longitude=?2")
 	public RoadSigns findByLatLanNotConfirmed(double lat, double lng);

@@ -55,7 +55,6 @@ public class RecordService {
 		}
 		return safePath;
 	}
-	
 
 	public RecordsOnPathDto pointsOnRoad(List<RecordDto> recordDtos) {
 
@@ -70,14 +69,42 @@ public class RecordService {
 		for (RecordDto recordDto : recordDtos) {
 //			if (accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()) != null)
 //				acc.add(accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()));
-			if (blackSpotRepository.findBlackSpot(recordDto.getLatitude(), recordDto.getLongitude()) != null)
-				blc.add(blackSpotRepository.findBlackSpot(recordDto.getLatitude(), recordDto.getLongitude()));
-			if (criticalPointRepository.findCriticalPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null)
-				crtcl.add(criticalPointRepository.findCriticalPoint(recordDto.getLatitude(), recordDto.getLongitude()));
-			if (roadSignsRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()) != null)
-				rdsign.add(roadSignsRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()));
-			if (speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null)
-				spd.add(speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(), recordDto.getLongitude()));
+			if (blackSpotRepository.findBlackSpot(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
+				List<BlackSpot> blckspts = blackSpotRepository.findBlackSpot(recordDto.getLatitude(),
+						recordDto.getLongitude());
+				for (BlackSpot b : blckspts) {
+					if (!blc.contains(b))
+						blc.add(b);
+				}
+			}
+
+			if (criticalPointRepository.findCriticalPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
+				List<CriticalPoint> crtclpoint = criticalPointRepository.findCriticalPoint(recordDto.getLatitude(),
+						recordDto.getLongitude());
+				for (CriticalPoint c : crtclpoint) {
+					if(!crtcl.contains(c))
+					crtcl.add(c);
+				}
+			}
+
+			if (roadSignsRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
+				List<RoadSigns> rdsigns = roadSignsRepository.findByLatLan(recordDto.getLatitude(),
+						recordDto.getLongitude());
+				for (RoadSigns r : rdsigns) {
+					if(!rdsign.contains(r))
+					rdsign.add(r);
+				}
+			}
+
+			if (speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
+				List<SpeedLimit> spdlmt = speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(),
+						recordDto.getLongitude());
+				for (SpeedLimit s : spdlmt) {
+					if(!spd.contains(s))
+					spd.add(s);
+				}
+			}
+
 		}
 //		if (acc != null)
 //			recordsOnPathDto.setAccidents(acc);
