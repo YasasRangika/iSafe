@@ -15,6 +15,9 @@ public interface AccidentRepository extends CrudRepository<Accident, Long> {
 	@Query("select a from Accident a where isConfirmed=1 and (6371 * acos (cos ( radians(?1) ) * cos(radians(lat)) * cos(radians(lng) - radians(?2)) + sin (radians(?1)) * sin(radians(lat)))) <= 0.5")
 	public List<Accident> findByLatLan(double lat, double lng) ;
 	
+	@Query("select a from Accident a where (6371 * acos (cos ( radians(?1) ) * cos(radians(lat)) * cos(radians(lng) - radians(?2)) + sin (radians(?1)) * sin(radians(lat)))) <= 0.01")
+	public List<Accident> findByLatLan1(double lat, double lng) ;
+	
 	@Query("select a from Accident a where isConfirmed=1")
 	public List<Accident> findAllByLatLan();
 	

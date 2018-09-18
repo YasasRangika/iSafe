@@ -97,7 +97,9 @@ public class UserController {
 
 	@PostMapping("/add/accident")
 	public ResponseEntity<?> incidentRecords(@RequestBody RecordDto incidentDto, HttpServletRequest request) {
+//		System.out.println("Point A");
 		UserDTO userDTO = this.getTokenData(request);
+//		System.out.println("Point B");
 		for (Iterator<String> it = userDTO.getRoles().iterator(); it.hasNext();) {
 			String f = it.next();
 			if (f.equals(new String("admin"))) {

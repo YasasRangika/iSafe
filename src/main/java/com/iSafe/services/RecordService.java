@@ -234,7 +234,7 @@ public class RecordService {
 		returnIncidentDto.setIsConfirmed(incident.getIsConfirmed());
 		returnIncidentDto.setReporterId(incident.getReporterId());
 
-		if (accidentRepository.findByLatLan(incident.getLat(), incident.getLng()) == null) {
+		if (accidentRepository.findByLatLan1(incident.getLat(), incident.getLng()).size() == 0) {
 			accidentRepository.save(incident);
 			returnIncidentDto.setSelf("http://localhost:8081/team8/incident" + incident.getId());
 			return returnIncidentDto;
