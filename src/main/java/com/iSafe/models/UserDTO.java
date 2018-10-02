@@ -13,20 +13,30 @@ public class UserDTO {
 	private String firstName;
 	private String lastName;
 	private String email;
-	private int phonenumber;
+	private String phonenumber;
 	private String nic;
 	private String address;
 	private Date dob;
 	private Set<String> roles;
 	private int points;
 	
-	private String licenseUrl;
 	private Date dateOfIssueLicense;
 	private Date dateOfExpireLicense;
-	private String imageOfDriverUrl;
+	private String licenseNum;
 	
+	private String imageOfDriverUrl;
+	private String idUrl;
+
 	private String kid;
 	private int isConfirmed;
+	
+	public String getLicenseNum() {
+		return licenseNum;
+	}
+
+	public void setLicenseNum(String licenseNum) {
+		this.licenseNum = licenseNum;
+	}
 
 	public String getUsername() {
 		return username;
@@ -60,11 +70,11 @@ public class UserDTO {
 		this.email = email;
 	}
 
-	public int getPhonenumber() {
+	public String getPhonenumber() {
 		return phonenumber;
 	}
 
-	public void setPhonenumber(int phonenumber) {
+	public void setPhonenumber(String phonenumber) {
 		this.phonenumber = phonenumber;
 	}
 
@@ -90,14 +100,6 @@ public class UserDTO {
 
 	public void setDob(Date dob) {
 		this.dob = dob;
-	}
-
-	public String getLicenseUrl() {
-		return licenseUrl;
-	}
-
-	public void setLicenseUrl(String licenseUrl) {
-		this.licenseUrl = licenseUrl;
 	}
 
 	public Date getDateOfIssueLicense() {
@@ -162,6 +164,14 @@ public class UserDTO {
 
 	public void setPoints(int points) {
 		this.points = points;
+	}
+
+	public String getIdUrl() {
+		return idUrl;
+	}
+
+	public void setIdUrl(String idUrl) {
+		this.idUrl = idUrl;
 	}
 	
 	

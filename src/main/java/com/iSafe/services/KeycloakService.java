@@ -79,6 +79,11 @@ public class KeycloakService {
 
 	}
 
+	public String getUserId(UserCredential userCredential) {
+		User u = userRepo.findByUserName(userCredential.getUsername());
+		return u.getKeycloakId();
+	}
+
 	public String getByRefreshToken(String refreshToken) {
 
 		String responseToken = null;
@@ -149,8 +154,8 @@ public class KeycloakService {
 
 				String userId = result.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
 
-				System.out.println(
-						"iSafe User created with u\n" + "\n" + "import og.api.document.UserDoc;serId:" + userId);
+				System.out.println("iSafe User created with userId:" + userId);// \n" + "\n" + "import
+																				// og.api.document.UserDoc;
 
 				User user2 = new User();
 				user2.setKeycloakId(userId);
@@ -160,7 +165,8 @@ public class KeycloakService {
 				user2.setNic(userDTO.getNic());
 				user2.setAddress(userDTO.getAddress());
 				user2.setDob(userDTO.getDob());
-				user2.setLicenseUrl(userDTO.getLicenseUrl());
+				user2.setLicenseNum(userDTO.getLicenseNum());
+				user2.setIdUrl(userDTO.getIdUrl());
 				user2.setDateOfIssueLicense(userDTO.getDateOfIssueLicense());
 				user2.setDateOfExpireLicense(userDTO.getDateOfExpireLicense());
 				user2.setImageOfDriverUrl(userDTO.getImageOfDriverUrl());
@@ -205,13 +211,13 @@ public class KeycloakService {
 
 	@Autowired
 	UserRepo userRepo;
-	
+
 	public boolean confirmUser(String id) {
 
 		UsersResource userRessource = getKeycloakUserResource();
 		UserRepresentation user = new UserRepresentation();
 //		System.out.println(id);
-		
+
 		try {
 //			System.out.println("point 1");
 //			user = userRessource.get("10a933b5-a3f9-4235-98c1-f45d0d05ef7f").toRepresentation();

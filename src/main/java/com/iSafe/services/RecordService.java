@@ -125,14 +125,14 @@ public class RecordService {
 			Point p = pointsRepository.getPointsOfUser(userDTO.getKid());
 			if (recordDto.getIsConfirmed() == 1) {
 				accidentRepository.confirmRecord(recordDto.getLatitude(), recordDto.getLongitude(), userDTO.getKid());
-				pointsRepository.addPointsToUser(userDTO.getKid(), (p.getPoints() + 10));/// may be this will come
+				pointsRepository.addPointsToUser(userDTO.getKid(), (p.getPoints() + 25));/// may be this will come
 																							/// directly with userID
-																							/// becouse record recording
+																							/// because record recording
 																							/// with userID who recorded
 				return 200;
 			} else {
 				accidentRepository.deleteRecord(recordDto.getLatitude(), recordDto.getLongitude());
-				pointsRepository.addPointsToUser(userDTO.getKid(), (p.getPoints() - 2));
+				pointsRepository.addPointsToUser(userDTO.getKid(), (p.getPoints() - 5));
 				return 201;
 			}
 		} else {
@@ -220,6 +220,7 @@ public class RecordService {
 		incident.setLng(incidentDto.getLongitude());
 		incident.setAccident(incidentDto.getAccidentDesc());
 		incident.setAccidentType(incidentDto.getAccidentType());
+		incident.setPhotoUrl(incidentDto.getPhotoUrl());
 		incident.setDate(incidentDto.getDate());
 		incident.setReporter(incidentDto.getReporter());
 		incident.setIsConfirmed(incidentDto.getIsConfirmed());
@@ -229,6 +230,7 @@ public class RecordService {
 		returnIncidentDto.setLongitude(incident.getLng());
 		returnIncidentDto.setAccidentDesc(incident.getAccident());
 		returnIncidentDto.setAccidentType(incident.getAccidentType());
+		returnIncidentDto.setPhotoUrl(incident.getPhotoUrl());
 		returnIncidentDto.setDate(incident.getDate());
 		returnIncidentDto.setReporter(incident.getReporter());
 		returnIncidentDto.setIsConfirmed(incident.getIsConfirmed());

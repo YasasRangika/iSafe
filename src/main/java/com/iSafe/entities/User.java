@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
 
 @Entity
 public class User {
@@ -14,31 +13,29 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	@NotNull
 	private String username;
-	@NotNull
-	private int phonenumber;
-	@NotNull
+	private String phonenumber;
 	private String email;
-	@NotNull
 	private String nic;
-	@NotNull
 	private String address;
-	@NotNull
 	private Date dob;
-	@NotNull
 	private int isConfirmed;
 	
-	@NotNull
-	private String licenseUrl;
-	@NotNull
 	private Date dateOfIssueLicense;
-	@NotNull
 	private Date dateOfExpireLicense;
-	@NotNull
+	
 	private String imageOfDriverUrl;
-	@NotNull
 	private String keycloakId;
+	private String licenseNum;
+	private String idUrl;
+
+	public String getLicenseNum() {
+		return licenseNum;
+	}
+
+	public void setLicenseNum(String licenseNum) {
+		this.licenseNum = licenseNum;
+	}
 
 	public long getId() {
 		return id;
@@ -56,11 +53,11 @@ public class User {
 		this.username = username;
 	}
 
-	public int getPhonenumber() {
+	public String getPhonenumber() {
 		return phonenumber;
 	}
 
-	public void setPhonenumber(int phonenumber) {
+	public void setPhonenumber(String phonenumber) {
 		this.phonenumber = phonenumber;
 	}
 
@@ -95,15 +92,7 @@ public class User {
 	public void setDob(Date dob) {
 		this.dob = dob;
 	}
-
-	public String getLicenseUrl() {
-		return licenseUrl;
-	}
-
-	public void setLicenseUrl(String licenseUrl) {
-		this.licenseUrl = licenseUrl;
-	}
-
+	
 	public Date getDateOfIssueLicense() {
 		return dateOfIssueLicense;
 	}
@@ -142,6 +131,14 @@ public class User {
 
 	public void setIsConfirmed(int isConfirmed) {
 		this.isConfirmed = isConfirmed;
+	}
+
+	public String getIdUrl() {
+		return idUrl;
+	}
+
+	public void setIdUrl(String idUrl) {
+		this.idUrl = idUrl;
 	}
 	
 	

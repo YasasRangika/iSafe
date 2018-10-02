@@ -25,6 +25,7 @@ public class RecordDto {
 	private String reporter;
 	private String accidentDesc;
 	private String accidentType;
+	private String photoUrl;
 	
 	private RoadSigns roadsigns;
 	private Accident incident;
@@ -176,6 +177,14 @@ public class RecordDto {
 	}
 	public void setThresholdLimit(double thresholdLimit) {
 		this.thresholdLimit = thresholdLimit;
+	}
+
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
 	}
     
     

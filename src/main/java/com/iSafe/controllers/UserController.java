@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.iSafe.entities.User;
 import com.iSafe.models.RecordDto;
 import com.iSafe.models.SafestPathDto;
 import com.iSafe.models.UserDTO;
 import com.iSafe.services.KeycloakService;
 import com.iSafe.services.RecordService;
+import com.iSafe.services.UserService;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -34,10 +36,23 @@ public class UserController {
 
 	@Autowired
 	KeycloakService keycloakService;
+	@Autowired
+	UserService userService;
 
 	@RequestMapping("hello")
 	public ResponseEntity<?> seyHello() {
 		return new ResponseEntity<Object>("Hello You are Athorized user.", HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/accDetails", method = RequestMethod.POST)
+	public ResponseEntity<?> viewDetails(HttpServletRequest request) {
+		UserDTO userDTO = this.getTokenData(request);
+		User u = userService.allDetails(userDTO.getKid());
+		if(u != null) {
+			return new ResponseEntity<Object>(u, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<Object>("User Inavalid", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value = "/userinfo", method = RequestMethod.POST)

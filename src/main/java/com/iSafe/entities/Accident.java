@@ -22,6 +22,7 @@ public class Accident {
 	private int isConfirmed;
 	private String adminId;
 	private String reporterId;
+	private String photoUrl;
 
 	public String getReporterId() {
 		return reporterId;
@@ -101,6 +102,14 @@ public class Accident {
 
 	public void setAccidentType(String accidentType) {
 		this.accidentType = accidentType;
+	}
+
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
 	}
 	
 }

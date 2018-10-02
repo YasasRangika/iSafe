@@ -30,6 +30,7 @@ import com.iSafe.models.UserCredential;
 import com.iSafe.models.UserDTO;
 import com.iSafe.services.KeycloakService;
 import com.iSafe.services.RecordService;
+import com.iSafe.services.UserService;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -43,6 +44,19 @@ public class OpenController {
 
 	@Autowired
 	private KeycloakService keycloakService;
+	@Autowired
+	private UserService userServices;
+
+	@RequestMapping(value = "/addUrls", method = RequestMethod.POST)
+	public ResponseEntity<?> setUrls(@RequestBody UserDTO userDTO) {
+		boolean status = userServices.updateUrls(userDTO);
+//		System.out.println(userDTO.getIdUrl());
+		if(status) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@RequestMapping(value = "/token", method = RequestMethod.POST)
 	public ResponseEntity<?> getTokenUsingCredentials(@RequestBody UserDTO userDTO) {
@@ -82,11 +96,14 @@ public class OpenController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
 
+		String userId = null;
 		try {
+
 			int statusId = keycloakService.createUserInKeyCloak(userDTO);
+			userId = keycloakService.getUserId(new UserCredential(userDTO.getUsername(), userDTO.getPassword()));
 
 			if (statusId == 201)
-				return new ResponseEntity<Object>("User created!", HttpStatus.CREATED);
+				return new ResponseEntity<>(userId, HttpStatus.OK);
 			else
 				return new ResponseEntity<Object>("User Creating Failed", HttpStatus.BAD_REQUEST);
 
@@ -149,7 +166,7 @@ public class OpenController {
 		if (roadSignsDto2.size() > 0) {
 //			System.out.println("Point 2");
 			return new ResponseEntity<Object>(roadSignsDto2, HttpStatus.OK);
-			//return ResponseEntity.ok(roadSignsDto2);
+			// return ResponseEntity.ok(roadSignsDto2);
 		} else {
 //			System.out.println("Point 3");
 			return new ResponseEntity<Object>("No matches!", HttpStatus.BAD_REQUEST);
