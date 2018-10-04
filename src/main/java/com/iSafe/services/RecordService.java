@@ -69,7 +69,7 @@ public class RecordService {
 		for (RecordDto recordDto : recordDtos) {
 //			if (accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()) != null)
 //				acc.add(accidentRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()));
-			if (blackSpotRepository.findBlackSpot(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
+			if (blackSpotRepository.findBlackSpot(recordDto.getLatitude(), recordDto.getLongitude()).size() != 0) {
 				List<BlackSpot> blckspts = blackSpotRepository.findBlackSpot(recordDto.getLatitude(),
 						recordDto.getLongitude());
 				for (BlackSpot b : blckspts) {
@@ -78,43 +78,44 @@ public class RecordService {
 				}
 			}
 
-			if (criticalPointRepository.findCriticalPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
+			if (criticalPointRepository.findCriticalPoint(recordDto.getLatitude(), recordDto.getLongitude()).size() != 0) {
 				List<CriticalPoint> crtclpoint = criticalPointRepository.findCriticalPoint(recordDto.getLatitude(),
 						recordDto.getLongitude());
 				for (CriticalPoint c : crtclpoint) {
-					if(!crtcl.contains(c))
-					crtcl.add(c);
+					if (!crtcl.contains(c))
+						crtcl.add(c);
 				}
 			}
 
-			if (roadSignsRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
+			if (roadSignsRepository.findByLatLan(recordDto.getLatitude(), recordDto.getLongitude()).size() != 0) {
 				List<RoadSigns> rdsigns = roadSignsRepository.findByLatLan(recordDto.getLatitude(),
 						recordDto.getLongitude());
 				for (RoadSigns r : rdsigns) {
-					if(!rdsign.contains(r))
-					rdsign.add(r);
+					if (!rdsign.contains(r))
+						rdsign.add(r);
 				}
 			}
 
-			if (speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
+			if (speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(), recordDto.getLongitude())
+					.size() != 0) {
 				List<SpeedLimit> spdlmt = speedLimitRepository.findSpeedLimitPoint(recordDto.getLatitude(),
 						recordDto.getLongitude());
 				for (SpeedLimit s : spdlmt) {
-					if(!spd.contains(s))
-					spd.add(s);
+					if (!spd.contains(s))
+						spd.add(s);
 				}
 			}
 
 		}
 //		if (acc != null)
 //			recordsOnPathDto.setAccidents(acc);
-		if (blc != null)
+		if (blc.size() != 0)
 			recordsOnPathDto.setBlackSpots(blc);
-		if (crtcl != null)
+		if (crtcl.size() != 0)
 			recordsOnPathDto.setCriticalPoints(crtcl);
-		if (rdsign != null)
+		if (rdsign.size() != 0)
 			recordsOnPathDto.setRoadSigns(rdsign);
-		if (spd != null)
+		if (spd.size() != 0)
 			recordsOnPathDto.setSpeedLimits(spd);
 
 		return recordsOnPathDto;
@@ -166,26 +167,27 @@ public class RecordService {
 		RecordDto rtnCriticalPointDto = new RecordDto();
 		CriticalPoint criticalPoint = new CriticalPoint();
 
-		criticalPoint.setLatitude(criticalPointDto.getLatitude());
-		criticalPoint.setLongitude(criticalPointDto.getLongitude());
-		criticalPoint.setRadius(criticalPointDto.getRadius());
-		criticalPoint.setMessage(criticalPointDto.getMessage());
-		criticalPoint.setStartTime(criticalPointDto.getStartTime());
-		criticalPoint.setEndTime(criticalPointDto.getEndTime());
-		criticalPoint.setIsConfirmed(criticalPointDto.getIsConfirmed());
-		criticalPoint.setReporterId(userDTO.getKid());
+		if (criticalPointRepository.findCriticalPoint(criticalPointDto.getLatitude(), criticalPointDto.getLongitude())
+				.size() == 0) {
+			
+			criticalPoint.setLatitude(criticalPointDto.getLatitude());
+			criticalPoint.setLongitude(criticalPointDto.getLongitude());
+			criticalPoint.setRadius(criticalPointDto.getRadius());
+			criticalPoint.setMessage(criticalPointDto.getMessage());
+			criticalPoint.setStartTime(criticalPointDto.getStartTime());
+			criticalPoint.setEndTime(criticalPointDto.getEndTime());
+			criticalPoint.setIsConfirmed(criticalPointDto.getIsConfirmed());
+			criticalPoint.setReporterId(userDTO.getKid());
 
-		rtnCriticalPointDto.setLatitude(criticalPoint.getLatitude());
-		rtnCriticalPointDto.setLongitude(criticalPoint.getLongitude());
-		rtnCriticalPointDto.setRadius(criticalPoint.getRadius());
-		rtnCriticalPointDto.setMessage(criticalPoint.getMessage());
-		rtnCriticalPointDto.setStartTime(criticalPoint.getStartTime());
-		rtnCriticalPointDto.setEndTime(criticalPoint.getEndTime());
-		rtnCriticalPointDto.setIsConfirmed(criticalPoint.getIsConfirmed());
-		rtnCriticalPointDto.setReporterId(criticalPoint.getReporterId());
-
-		if (criticalPointRepository.findCriticalPoint(criticalPoint.getLatitude(),
-				criticalPoint.getLongitude()) == null) {
+			rtnCriticalPointDto.setLatitude(criticalPoint.getLatitude());
+			rtnCriticalPointDto.setLongitude(criticalPoint.getLongitude());
+			rtnCriticalPointDto.setRadius(criticalPoint.getRadius());
+			rtnCriticalPointDto.setMessage(criticalPoint.getMessage());
+			rtnCriticalPointDto.setStartTime(criticalPoint.getStartTime());
+			rtnCriticalPointDto.setEndTime(criticalPoint.getEndTime());
+			rtnCriticalPointDto.setIsConfirmed(criticalPoint.getIsConfirmed());
+			rtnCriticalPointDto.setReporterId(criticalPoint.getReporterId());
+			
 			criticalPointRepository.save(criticalPoint);
 			rtnCriticalPointDto.setSelf("http://localhost:8081/team8/newCritical" + criticalPoint.getId());
 			return rtnCriticalPointDto;
@@ -200,7 +202,7 @@ public class RecordService {
 		List<CriticalPoint> criticalPoint = new ArrayList<CriticalPoint>();
 
 		if (criticalPointRepository.findByRadius(criticalPointDto.getLatitude(), criticalPointDto.getLongitude(),
-				criticalPointDto.getRadius()) != null) {
+				criticalPointDto.getRadius()).size() != 0) {
 
 			criticalPoint = criticalPointRepository.findByRadius(criticalPointDto.getLatitude(),
 					criticalPointDto.getLongitude(), criticalPointDto.getRadius());
@@ -215,28 +217,30 @@ public class RecordService {
 
 		RecordDto returnIncidentDto = new RecordDto();
 		Accident incident = new Accident();
+//		System.out.println("Point 01");
 
-		incident.setLat(incidentDto.getLatitude());
-		incident.setLng(incidentDto.getLongitude());
-		incident.setAccident(incidentDto.getAccidentDesc());
-		incident.setAccidentType(incidentDto.getAccidentType());
-		incident.setPhotoUrl(incidentDto.getPhotoUrl());
-		incident.setDate(incidentDto.getDate());
-		incident.setReporter(incidentDto.getReporter());
-		incident.setIsConfirmed(incidentDto.getIsConfirmed());
-		incident.setReporterId(userDTO.getKid());
+		if (accidentRepository.findByLatLan1(incidentDto.getLatitude(), incidentDto.getLongitude()).size() == 0) {
 
-		returnIncidentDto.setLatitude(incident.getLat());
-		returnIncidentDto.setLongitude(incident.getLng());
-		returnIncidentDto.setAccidentDesc(incident.getAccident());
-		returnIncidentDto.setAccidentType(incident.getAccidentType());
-		returnIncidentDto.setPhotoUrl(incident.getPhotoUrl());
-		returnIncidentDto.setDate(incident.getDate());
-		returnIncidentDto.setReporter(incident.getReporter());
-		returnIncidentDto.setIsConfirmed(incident.getIsConfirmed());
-		returnIncidentDto.setReporterId(incident.getReporterId());
+			incident.setLat(incidentDto.getLatitude());
+			incident.setLng(incidentDto.getLongitude());
+			incident.setAccident(incidentDto.getAccidentDesc());
+			incident.setAccidentType(incidentDto.getAccidentType());
+			incident.setPhotoUrl(incidentDto.getPhotoUrl());
+			incident.setDate(incidentDto.getDate());
+			incident.setReporter(incidentDto.getReporter());
+			incident.setIsConfirmed(incidentDto.getIsConfirmed());
+			incident.setReporterId(userDTO.getKid());
 
-		if (accidentRepository.findByLatLan1(incident.getLat(), incident.getLng()).size() == 0) {
+			returnIncidentDto.setLatitude(incident.getLat());
+			returnIncidentDto.setLongitude(incident.getLng());
+			returnIncidentDto.setAccidentDesc(incident.getAccident());
+			returnIncidentDto.setAccidentType(incident.getAccidentType());
+			returnIncidentDto.setPhotoUrl(incident.getPhotoUrl());
+			returnIncidentDto.setDate(incident.getDate());
+			returnIncidentDto.setReporter(incident.getReporter());
+			returnIncidentDto.setIsConfirmed(incident.getIsConfirmed());
+			returnIncidentDto.setReporterId(incident.getReporterId());
+
 			accidentRepository.save(incident);
 			returnIncidentDto.setSelf("http://localhost:8081/team8/incident" + incident.getId());
 			return returnIncidentDto;
@@ -255,7 +259,7 @@ public class RecordService {
 		blackSpot.setRadius(incidentDto.getRadius());
 		blackSpot.setMessage(incidentDto.getMessage());
 
-		if (blackSpotRepository.findBlackSpot(blackSpot.getLatitude(), blackSpot.getLongitude()) == null) {
+		if (blackSpotRepository.findBlackSpot(blackSpot.getLatitude(), blackSpot.getLongitude()).size() == 0) {
 			blackSpotRepository.save(blackSpot);
 			return true;
 		} else {
@@ -268,7 +272,7 @@ public class RecordService {
 		List<Accident> incident = new ArrayList<Accident>();
 
 		if (accidentRepository.findByRadius(incidentDto.getLatitude(), incidentDto.getLongitude(),
-				incidentDto.getRadius()) != null) {
+				incidentDto.getRadius()).size() != 0) {
 			incident = accidentRepository.findByRadius(incidentDto.getLatitude(), incidentDto.getLongitude(),
 					incidentDto.getRadius());
 
@@ -319,7 +323,7 @@ public class RecordService {
 		List<BlackSpot> blackSpot = new ArrayList<BlackSpot>();
 
 		if (blackSpotRepository.findByRadius(blackSpotDto.getLatitude(), blackSpotDto.getLongitude(),
-				blackSpotDto.getRadius()) != null) {
+				blackSpotDto.getRadius()).size() != 0) {
 
 			blackSpot = blackSpotRepository.findByRadius(blackSpotDto.getLatitude(), blackSpotDto.getLongitude(),
 					blackSpotDto.getRadius());
@@ -333,23 +337,24 @@ public class RecordService {
 	public RecordDto saveNewSign(RecordDto roadSignsDto, UserDTO userDTO) {
 
 		RecordDto returnRoadSignsDto = new RecordDto();
-
 		RoadSigns roadSigns = new RoadSigns();
-		roadSigns.setLatitude(roadSignsDto.getLatitude());
-		roadSigns.setLongitude(roadSignsDto.getLongitude());
-		roadSigns.setSign(roadSignsDto.getSign());
-		roadSigns.setMessage(roadSignsDto.getMessage());
-		roadSigns.setIsConfirmed(roadSignsDto.getIsConfirmed());
-		roadSigns.setReporterId(userDTO.getKid());
 
-		returnRoadSignsDto.setLatitude(roadSigns.getLatitude());
-		returnRoadSignsDto.setLongitude(roadSigns.getLongitude());
-		returnRoadSignsDto.setSign(roadSigns.getSign());
-		returnRoadSignsDto.setMessage(roadSigns.getMessage());
-		returnRoadSignsDto.setIsConfirmed(roadSigns.getIsConfirmed());
-		returnRoadSignsDto.setReporterId(roadSigns.getReporterId());
+		if (roadSignsRepository.findByLatLan(roadSignsDto.getLatitude(), roadSignsDto.getLongitude()).size() == 0) {
 
-		if (roadSignsRepository.findByLatLan(roadSigns.getLatitude(), roadSigns.getLongitude()) == null) {
+			roadSigns.setLatitude(roadSignsDto.getLatitude());
+			roadSigns.setLongitude(roadSignsDto.getLongitude());
+			roadSigns.setSign(roadSignsDto.getSign());
+			roadSigns.setMessage(roadSignsDto.getMessage());
+			roadSigns.setIsConfirmed(roadSignsDto.getIsConfirmed());
+			roadSigns.setReporterId(userDTO.getKid());
+
+			returnRoadSignsDto.setLatitude(roadSigns.getLatitude());
+			returnRoadSignsDto.setLongitude(roadSigns.getLongitude());
+			returnRoadSignsDto.setSign(roadSigns.getSign());
+			returnRoadSignsDto.setMessage(roadSigns.getMessage());
+			returnRoadSignsDto.setIsConfirmed(roadSigns.getIsConfirmed());
+			returnRoadSignsDto.setReporterId(roadSigns.getReporterId());
+
 			returnRoadSignsDto.setSelf("http://localhost:8081/team8/sign" + roadSigns.getId());
 			roadSignsRepository.save(roadSigns);
 
@@ -365,7 +370,7 @@ public class RecordService {
 		List<RoadSigns> roadSigns = new ArrayList<RoadSigns>();
 
 		if (roadSignsRepository.findByRadius(roadSignsDto.getLatitude(), roadSignsDto.getLongitude(),
-				roadSignsDto.getRadius()) != null) {
+				roadSignsDto.getRadius()).size() != 0) {
 			roadSigns = roadSignsRepository.findByRadius(roadSignsDto.getLatitude(), roadSignsDto.getLongitude(),
 					roadSignsDto.getRadius());
 
@@ -380,23 +385,25 @@ public class RecordService {
 		RecordDto rtnSpeedLimitDto = new RecordDto();
 		SpeedLimit speedLimit = new SpeedLimit();
 
-		speedLimit.setLatitude(speedLimitDto.getLatitude());
-		speedLimit.setLongitude(speedLimit.getLongitude());
-		speedLimit.setSpeedLimit(speedLimitDto.getLimit());
-		speedLimit.setRadius(speedLimitDto.getRadius());
-		speedLimit.setThresholdLimit(speedLimitDto.getThresholdLimit());
-		speedLimit.setMessage(speedLimitDto.getMessage());
-//		speedLimit.setReporterId(userDTO.getKid());
+		if (speedLimitRepository.findSpeedLimitPoint(speedLimitDto.getLatitude(), speedLimit.getLongitude())
+				.size() == 0) {
 
-		rtnSpeedLimitDto.setLatitude(speedLimit.getLatitude());
-		rtnSpeedLimitDto.setLongitude(speedLimit.getLongitude());
-		rtnSpeedLimitDto.setLimit(speedLimit.getSpeedLimit());
-		rtnSpeedLimitDto.setRadius(speedLimit.getRadius());
-		rtnSpeedLimitDto.setThresholdLimit(speedLimit.getThresholdLimit());
-		rtnSpeedLimitDto.setMessage(speedLimit.getMessage());
-//		rtnSpeedLimitDto.setReporterId(speedLimit.getReporterId());
+			speedLimit.setLatitude(speedLimitDto.getLatitude());
+			speedLimit.setLongitude(speedLimit.getLongitude());
+			speedLimit.setSpeedLimit(speedLimitDto.getLimit());
+			speedLimit.setRadius(speedLimitDto.getRadius());
+			speedLimit.setThresholdLimit(speedLimitDto.getThresholdLimit());
+			speedLimit.setMessage(speedLimitDto.getMessage());
+//			speedLimit.setReporterId(userDTO.getKid());
 
-		if (speedLimitRepository.findSpeedLimitPoint(speedLimit.getLatitude(), speedLimit.getLongitude()) == null) {
+			rtnSpeedLimitDto.setLatitude(speedLimit.getLatitude());
+			rtnSpeedLimitDto.setLongitude(speedLimit.getLongitude());
+			rtnSpeedLimitDto.setLimit(speedLimit.getSpeedLimit());
+			rtnSpeedLimitDto.setRadius(speedLimit.getRadius());
+			rtnSpeedLimitDto.setThresholdLimit(speedLimit.getThresholdLimit());
+			rtnSpeedLimitDto.setMessage(speedLimit.getMessage());
+//			rtnSpeedLimitDto.setReporterId(speedLimit.getReporterId());
+
 			speedLimitRepository.save(speedLimit);
 			rtnSpeedLimitDto.setSelf("http://localhost:8081/team8/addSpeedLimit" + speedLimit.getId());
 			return rtnSpeedLimitDto;
@@ -411,7 +418,7 @@ public class RecordService {
 		List<SpeedLimit> speedLimit = new ArrayList<SpeedLimit>();
 
 		if (speedLimitRepository.findByRadius(speedLimitDto.getLatitude(), speedLimitDto.getLongitude(),
-				speedLimitDto.getRadius()) != null) {
+				speedLimitDto.getRadius()).size() != 0) {
 			speedLimit = speedLimitRepository.findByRadius(speedLimitDto.getLatitude(), speedLimitDto.getLongitude(),
 					speedLimitDto.getRadius());
 

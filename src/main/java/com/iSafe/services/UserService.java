@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.iSafe.entities.Point;
 import com.iSafe.entities.User;
 import com.iSafe.models.UserDTO;
+import com.iSafe.repositories.PointsRepository;
 import com.iSafe.repositories.UserRepo;
 
 @Service
@@ -14,10 +16,27 @@ public class UserService {
 
 	@Autowired
 	UserRepo userRepo;
+	@Autowired
+	PointsRepository pointsRepository;
 	
-	public User allDetails(String kid) {
+	public UserDTO allDetails(String kid) {
 		User u = userRepo.findByKeycloakId(kid);
-		return u;
+		Point p = pointsRepository.getPointsOfUser(kid);
+		UserDTO userDTO = new UserDTO();
+		userDTO.setUsername(u.getUsername());
+		userDTO.setPhonenumber(u.getPhonenumber());
+		userDTO.setEmail(u.getEmail());
+		userDTO.setNic(u.getNic());
+		userDTO.setAddress(u.getAddress());
+		userDTO.setDob(u.getDob());
+		userDTO.setDateOfIssueLicense(u.getDateOfIssueLicense());
+		userDTO.setDateOfExpireLicense(u.getDateOfExpireLicense());
+		userDTO.setImageOfDriverUrl(u.getImageOfDriverUrl());
+		userDTO.setKid(u.getKeycloakId());
+		userDTO.setLicenseNum(u.getLicenseNum());
+		userDTO.setIdUrl(u.getIdUrl());
+		userDTO.setPoints(p.getPoints());
+		return userDTO;
 	}
 
 	public boolean updateUrls(UserDTO userDTO) {
