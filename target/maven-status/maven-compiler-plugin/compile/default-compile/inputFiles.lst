@@ -22,6 +22,7 @@
 /home/yasas/Documents/iSafe/src/main/java/com/iSafe/controllers/OpenController.java
 /home/yasas/Documents/iSafe/src/main/java/com/iSafe/services/RecordService.java
 /home/yasas/Documents/iSafe/src/main/java/com/iSafe/entities/BlackSpot.java
+/home/yasas/Documents/iSafe/src/main/java/com/iSafe/helpers/SendMail.java
 /home/yasas/Documents/iSafe/src/main/java/com/iSafe/models/RecordsOnPathDto.java
 /home/yasas/Documents/iSafe/src/main/java/com/iSafe/models/SafestPathDto.java
 /home/yasas/Documents/iSafe/src/main/java/com/iSafe/repositories/BlackSpotRepository.java

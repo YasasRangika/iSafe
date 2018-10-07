@@ -228,7 +228,8 @@ public class KeycloakService {
 //			System.out.println("point 1");
 //			System.out.println(id);
 			userRepo.confirmUser(id);
-//			System.out.println("point 2");
+			User u = userRepo.findByKeycloakId(id);
+			sendEmail(u.getEmail(), u.getUsername());
 			return true;
 		} catch (Exception ex) {
 //			System.out.println(ex);
@@ -371,5 +372,20 @@ public class KeycloakService {
 
 		return realmResource;
 
+	}
+	
+	private void sendEmail(String email, String userName) throws Exception  {
+		
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpPost post = new HttpPost("https://mail.no1.lk");
+		
+		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		urlParameters.add(new BasicNameValuePair("email", email));
+		urlParameters.add(new BasicNameValuePair("subject", "Successfully registered for iSafe Application Services"));
+		urlParameters.add(new BasicNameValuePair("message", "Dear Mr/Ms/Mrs "+userName+","+"\n\nCongratulations!! Your iSafe account is activated with unlimited user access. Login today itself to enjoy the easy and safe life with iSafe. \n\nBest Regards, \nTeam iSafe\n"));
+		urlParameters.add(new BasicNameValuePair("auth", "b282d48a3e16a924a28feb1a297e5e5a"));
+		
+		post.setEntity(new UrlEncodedFormEntity(urlParameters));
+		client.execute(post);
 	}
 }

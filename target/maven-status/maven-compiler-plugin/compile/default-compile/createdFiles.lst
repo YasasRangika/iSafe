@@ -22,6 +22,8 @@ com/iSafe/models/RecordsOnPathDto.class
 com/iSafe/repositories/CriticalPointRepository.class
 com/iSafe/services/KeycloakService.class
 com/iSafe/models/SafestPathDto.class
+com/iSafe/helpers/SendMail.class
 com/iSafe/iSafeApplication.class
 com/iSafe/repositories/RoadSignsRepository.class
 com/iSafe/repositories/SpeedLimitRepository.class
+com/iSafe/helpers/SendMail$1.class

@@ -18,11 +18,12 @@ public class UserService {
 	UserRepo userRepo;
 	@Autowired
 	PointsRepository pointsRepository;
-	
+
 	public UserDTO allDetails(String kid) {
 		User u = userRepo.findByKeycloakId(kid);
 		Point p = pointsRepository.getPointsOfUser(kid);
 		UserDTO userDTO = new UserDTO();
+
 		userDTO.setUsername(u.getUsername());
 		userDTO.setPhonenumber(u.getPhonenumber());
 		userDTO.setEmail(u.getEmail());
@@ -77,12 +78,25 @@ public class UserService {
 		return usr;
 	}
 
+	public List<User> getAllUsers() {
+		List<User> usr = userRepo.allUsers();
+		return usr;
+	}
+
 	@Autowired
 	KeycloakService keycloakService;
 
 	public boolean confirmUser(UserDTO userDTO) {
 //		System.out.println(userDTO.getKid());
-		boolean status = keycloakService.confirmUser(userDTO.getKid());
+		boolean status;
+		if (userDTO.getIsConfirmed() == 1) {
+			status = keycloakService.confirmUser(userDTO.getKid());
+		} else if(userDTO.getIsConfirmed() == 0){
+			userRepo.deleteRecord(userDTO.getKid());
+			status = true;
+		}else{
+			status = false;
+		}
 		return status;
 	}
 }

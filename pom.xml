@@ -72,8 +72,8 @@
 			<artifactId>keycloak-admin-client</artifactId>
 			<version>3.1.0.Final</version>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -81,7 +81,7 @@
 		</dependency>
 
 
-		
+
 
 		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
 		<dependency>
@@ -119,6 +119,14 @@
 			<artifactId>firebase-server-sdk</artifactId>
 			<version>3.0.1</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
+		<!-- <dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.1</version>
+		</dependency> -->
+
 
 	</dependencies>
 

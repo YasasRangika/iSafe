@@ -28,7 +28,7 @@ import com.iSafe.services.KeycloakService;
 import com.iSafe.services.RecordService;
 import com.iSafe.services.UserService;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -56,6 +56,7 @@ public class UserController {
 
 	@RequestMapping(value = "/userinfo", method = RequestMethod.POST)
 	public ResponseEntity<?> userinfo(HttpServletRequest request) {
+//		System.out.println("Done!!!");
 		UserDTO userDTO = this.getTokenData(request);
 		return new ResponseEntity<Object>(userDTO, HttpStatus.OK);
 	}
@@ -174,8 +175,8 @@ public class UserController {
 		userDTO.setKid(token.getAccessTokenHash());
 		// userDTO.setAddress(token.getAddress());
 		// userDTO.setPhonenumber(Integer.parseInt(token.getPhoneNumber()));
-		Set<String> roles = token.getRealmAccess().getRoles();
-		userDTO.setRoles(roles);
+		Set<String> roles = token.getRealmAccess().getRoles();//05/10
+		userDTO.setRoles(roles);//05/10
 		userDTO.setKid(token.getSubject());
 		return userDTO;
 	}

@@ -15,6 +15,6 @@ public interface CriticalPointRepository extends CrudRepository<CriticalPoint, L
 	@Query("select c from CriticalPoint c where isConfirmed=1 and (6371 * acos (cos ( radians(?1) ) * cos(radians(latitude)) * cos(radians(longitude) - radians(?2)) + sin (radians(?1)) * sin(radians(latitude)))) <= ?3")
 	public List<CriticalPoint> findByRadius(double lat, double lng, double radius);
 
-//	@Query("select c from CriticalPoint c where criticalPointId=?1")
-//	public CriticalPoint findByCriticalPointId(String id);
+	@Query("select c from CriticalPoint c")
+	public List<CriticalPoint> findAllCriticalPoints();
 }

@@ -18,9 +18,15 @@ public interface UserRepo extends CrudRepository<User, Long> {
 
 	@Query("select u from User u where u.isConfirmed=0")
 	public List<User> notConfirmed();
+	
+	@Query("select u from User u where u.isConfirmed=1")
+	public List<User> allUsers();
 
 	@Query("select u from User u where u.username=?1")
 	public User findByUserName(String userName);
+	
+	@Query("select u from User u where u.keycloakId=?1")
+	public User findByKid(String id);
 
 	@Modifying
 	@Transactional
@@ -31,5 +37,10 @@ public interface UserRepo extends CrudRepository<User, Long> {
 	@Transactional
 	@Query("update User set imageOfDriverUrl=?1,idUrl=?2 where keycloakId=?3")
 	public void addUrls(String uUrl, String iUrl, String id);
+	
+	@Modifying
+	@Transactional
+	@Query("delete from User where keycloakId=?1")
+	public void deleteRecord(String id);
 
 }

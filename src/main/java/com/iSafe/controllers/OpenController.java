@@ -32,7 +32,7 @@ import com.iSafe.services.KeycloakService;
 import com.iSafe.services.RecordService;
 import com.iSafe.services.UserService;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/open")
 public class OpenController {
@@ -51,9 +51,9 @@ public class OpenController {
 	public ResponseEntity<?> setUrls(@RequestBody UserDTO userDTO) {
 		boolean status = userServices.updateUrls(userDTO);
 //		System.out.println(userDTO.getIdUrl());
-		if(status) {
+		if (status) {
 			return new ResponseEntity<>(HttpStatus.OK);
-		}else {
+		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
