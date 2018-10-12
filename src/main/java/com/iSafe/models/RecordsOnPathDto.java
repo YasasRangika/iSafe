@@ -8,6 +8,9 @@ import com.iSafe.entities.CriticalPoint;
 import com.iSafe.entities.RoadSigns;
 import com.iSafe.entities.SpeedLimit;
 
+//This is the JSON format of all kind of record data that transfer within the server and the front-end
+//This format use to identify what is the structure of received data
+
 public class RecordsOnPathDto {
 
 	//private List<Accident> accidents;

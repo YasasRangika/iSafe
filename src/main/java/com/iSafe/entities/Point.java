@@ -5,6 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+//This is the table creation of points of users table
+//User id will take from user table
+
 @Entity
 public class Point {
 

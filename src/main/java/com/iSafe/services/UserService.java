@@ -11,6 +11,8 @@ import com.iSafe.models.UserDTO;
 import com.iSafe.repositories.PointsRepository;
 import com.iSafe.repositories.UserRepo;
 
+//Handle all the user activities is done by this class
+
 @Service
 public class UserService {
 
@@ -19,6 +21,8 @@ public class UserService {
 	@Autowired
 	PointsRepository pointsRepository;
 
+	//Get all the user details from user table
+	
 	public UserDTO allDetails(String kid) {
 		User u = userRepo.findByKeycloakId(kid);
 		Point p = pointsRepository.getPointsOfUser(kid);
@@ -36,10 +40,16 @@ public class UserService {
 		userDTO.setKid(u.getKeycloakId());
 		userDTO.setLicenseNum(u.getLicenseNum());
 		userDTO.setIdUrl(u.getIdUrl());
-		userDTO.setPoints(p.getPoints());
+		try {
+			userDTO.setPoints(p.getPoints());
+		} catch (Exception e) {
+			userDTO.setPoints(0);
+		}
 		return userDTO;
 	}
 
+	//Update user photo and ID photo that stored in firebase(Only url will be added)
+	
 	public boolean updateUrls(UserDTO userDTO) {
 		try {
 			userRepo.addUrls(userDTO.getImageOfDriverUrl(), userDTO.getIdUrl(), userDTO.getKid());
@@ -51,6 +61,8 @@ public class UserService {
 		}
 	}
 
+	//All the method names begin from here will implies the task they do
+	
 	public User saveUser(User user) {
 		System.out.println("Saving...");
 		return userRepo.save(user);
@@ -91,10 +103,10 @@ public class UserService {
 		boolean status;
 		if (userDTO.getIsConfirmed() == 1) {
 			status = keycloakService.confirmUser(userDTO.getKid());
-		} else if(userDTO.getIsConfirmed() == 0){
+		} else if (userDTO.getIsConfirmed() == 0) {
 			userRepo.deleteRecord(userDTO.getKid());
 			status = true;
-		}else{
+		} else {
 			status = false;
 		}
 		return status;

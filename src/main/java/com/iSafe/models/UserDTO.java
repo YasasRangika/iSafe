@@ -5,6 +5,11 @@ import java.util.Set;
 
 import lombok.Data;
 
+//This is the JSON format of user data that transfer within the server and the front-end
+//This format use to identify what is the structure of received data
+//There is no need to fill all the variables include here
+//According to the situation set variables and send them to the server
+
 @Data
 public class UserDTO {
 
@@ -173,6 +178,5 @@ public class UserDTO {
 	public void setIdUrl(String idUrl) {
 		this.idUrl = idUrl;
 	}
-	
 	
 }

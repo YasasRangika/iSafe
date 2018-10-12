@@ -10,6 +10,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.iSafe.entities.User;
 
+//These are the queries to do CRUD activities using java.
+
 public interface UserRepo extends CrudRepository<User, Long> {
 
 	public User findByEmail(String email);

@@ -9,6 +9,11 @@ import com.iSafe.entities.Accident;
 import com.iSafe.entities.RoadSigns;
 import com.iSafe.entities.SpeedLimit;
 
+//This is the format of record data that transfer within the server and the front-end
+//This format use to identify what is the structure of received data
+//There is no need to fill all the variables include here
+//According to the situation set variables and send them to the server
+
 public class RecordDto {
 
 	private String self;

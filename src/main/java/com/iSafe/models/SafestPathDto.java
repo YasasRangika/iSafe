@@ -2,6 +2,8 @@ package com.iSafe.models;
 
 import java.util.List;
 
+//Structure of transaction of data in safest path calculation
+
 public class SafestPathDto {
 	
 	private List<RecordDto> points;

@@ -8,6 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.iSafe.entities.Point;
 
+//These are the queries to do CRUD activities using java.
+
 public interface PointsRepository extends CrudRepository<Point, Long> {
 
 	@Query("select p from Point p where userId=?1")

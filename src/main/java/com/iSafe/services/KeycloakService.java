@@ -32,6 +32,9 @@ import com.iSafe.models.UserCredential;
 import com.iSafe.models.UserDTO;
 import com.iSafe.repositories.UserRepo;
 
+//This class do keycloak services
+//Some of them are provided by keycloak
+
 @Component
 public class KeycloakService {
 
@@ -56,6 +59,8 @@ public class KeycloakService {
 	@Autowired
 	UserService userService;
 
+	//Token generation
+	
 	public String getToken(UserCredential userCredential) {
 		String responseToken = null;
 		try {
@@ -125,6 +130,8 @@ public class KeycloakService {
 		return result.toString();
 	}
 
+	//Create user in key cloak
+	
 	public int createUserInKeyCloak(UserDTO userDTO) {
 
 		int statusId = 0;
@@ -157,6 +164,8 @@ public class KeycloakService {
 				System.out.println("iSafe User created with userId:" + userId);// \n" + "\n" + "import
 																				// og.api.document.UserDoc;
 
+				//In same time the data will be updated in User table too
+				
 				User user2 = new User();
 				user2.setKeycloakId(userId);
 				user2.setUsername(userDTO.getUsername());
@@ -212,6 +221,10 @@ public class KeycloakService {
 	@Autowired
 	UserRepo userRepo;
 
+	//Here doing confirm user activities
+	//Enable user
+	//Email verified
+	
 	public boolean confirmUser(String id) {
 
 		UsersResource userRessource = getKeycloakUserResource();
@@ -373,6 +386,8 @@ public class KeycloakService {
 		return realmResource;
 
 	}
+	
+	//Send account verification email
 	
 	private void sendEmail(String email, String userName) throws Exception  {
 		

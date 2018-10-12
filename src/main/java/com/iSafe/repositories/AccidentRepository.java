@@ -10,8 +10,11 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.iSafe.entities.Accident;
 
+//These are the queries to do CRUD activities using java.
+
 public interface AccidentRepository extends CrudRepository<Accident, Long> {
 	
+	//Retrieve data within a radius
 	@Query("select a from Accident a where isConfirmed=1 and (6371 * acos (cos ( radians(?1) ) * cos(radians(lat)) * cos(radians(lng) - radians(?2)) + sin (radians(?1)) * sin(radians(lat)))) <= 0.5")
 	public List<Accident> findByLatLan(double lat, double lng) ;
 	

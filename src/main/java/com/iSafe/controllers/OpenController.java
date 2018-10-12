@@ -32,11 +32,15 @@ import com.iSafe.services.KeycloakService;
 import com.iSafe.services.RecordService;
 import com.iSafe.services.UserService;
 
+//All the open user activities can do using this api s
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/open")
 public class OpenController {
 
+	//To check server is working
+	
 	@RequestMapping("")
 	public ResponseEntity<?> index() {
 		return new ResponseEntity<Object>("Welcome!", HttpStatus.OK);
@@ -47,6 +51,8 @@ public class OpenController {
 	@Autowired
 	private UserService userServices;
 
+	//This api use by android application to add user photo and ID card photo
+	
 	@RequestMapping(value = "/addUrls", method = RequestMethod.POST)
 	public ResponseEntity<?> setUrls(@RequestBody UserDTO userDTO) {
 		boolean status = userServices.updateUrls(userDTO);
@@ -58,6 +64,9 @@ public class OpenController {
 		}
 	}
 
+	//This api use to get token of the user that passes via http request as well as verify the login too.
+	//Need username and password as credentials to take the token.
+	
 	@RequestMapping(value = "/token", method = RequestMethod.POST)
 	public ResponseEntity<?> getTokenUsingCredentials(@RequestBody UserDTO userDTO) {
 		System.out.println("Get Token");
@@ -75,6 +84,26 @@ public class OpenController {
 		return new ResponseEntity<>(responseToken, HttpStatus.OK);
 
 	}
+	
+	//This api returns the user id according to the user details provided by fron end
+	
+	@RequestMapping(value = "/userID", method = RequestMethod.POST)
+	public ResponseEntity<?> getUserID(@RequestBody UserDTO userDTO) {
+		String userId = null;
+		try {
+
+			userId = keycloakService.getUserId(new UserCredential(userDTO.getUsername(), userDTO.getPassword()));
+
+		} catch (Exception e) {
+
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<>(userId, HttpStatus.OK);
+
+	}
+	
+	//If token is expired while using iSafe this api will generate new token
 
 	@RequestMapping(value = "/refreshtoken", method = RequestMethod.GET)
 	public ResponseEntity<?> getTokenUsingRefreshToken(@RequestHeader(value = "Authorization") String refreshToken) {
@@ -93,6 +122,8 @@ public class OpenController {
 
 	}
 
+	//This api is same as in same api calls in admin path
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
 
@@ -124,6 +155,8 @@ public class OpenController {
 			return new ResponseEntity<Object>("User Creating Failed", HttpStatus.BAD_REQUEST);
 	}
 
+	//To logout from the session
+	
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public ResponseEntity<?> logoutUser(HttpServletRequest request) {
 
@@ -138,6 +171,9 @@ public class OpenController {
 		return new ResponseEntity<>("Hi!, you have logged out successfully!", HttpStatus.OK);
 
 	}
+	
+	//To update the password of the user
+	//User passwords are kept in keycloak server and no one can view them
 
 	@RequestMapping(value = "/update/password", method = RequestMethod.GET)
 	public ResponseEntity<?> updatePassword(HttpServletRequest request, String newPassword) {
@@ -153,6 +189,8 @@ public class OpenController {
 		return new ResponseEntity<>("Hi!, your password has been successfully updated!", HttpStatus.OK);
 
 	}
+	
+	//These api s are same as in same api calls in admin path
 
 	// ----------------------Road Signs(start)-------------------------------//
 

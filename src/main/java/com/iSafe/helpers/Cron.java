@@ -14,6 +14,9 @@ import com.iSafe.repositories.AccidentRepository;
 import com.iSafe.repositories.BlackSpotRepository;
 import com.iSafe.services.RecordService;
 
+//This is the cron job initialization class
+//Blackspots will be generated via algorithm in every week Sunday mid night
+
 @Component
 public class Cron {
 

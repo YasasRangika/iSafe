@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+//This is the table creation of users
+//All the user details will be in first normalization form
+
 @Entity
 public class User {
 

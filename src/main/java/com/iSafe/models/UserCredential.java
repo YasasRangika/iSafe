@@ -2,6 +2,8 @@ package com.iSafe.models;
 
 import lombok.Data;
 
+//To pass user credentials as JSON format
+
 @Data
 public class UserCredential {
 

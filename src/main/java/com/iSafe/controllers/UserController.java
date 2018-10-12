@@ -28,6 +28,9 @@ import com.iSafe.services.KeycloakService;
 import com.iSafe.services.RecordService;
 import com.iSafe.services.UserService;
 
+//api s in this class can only use by authenticated user.
+//In current iSafe version only support this to android application
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/user")
@@ -60,12 +63,14 @@ public class UserController {
 		UserDTO userDTO = this.getTokenData(request);
 		return new ResponseEntity<Object>(userDTO, HttpStatus.OK);
 	}
+	
+	//Names are imply the use of apis as same as in admin and open user controllers
 
 	// ----------------------Road Signs(start)-------------------------------//
 
 	@Autowired
 	RecordService tmproadSignService;
-
+	
 	@PostMapping("/add/sign")
 	public ResponseEntity<?> addNewSign(@RequestBody RecordDto roadSignsDto, HttpServletRequest request) {
 		UserDTO userDTO = this.getTokenData(request);
@@ -98,6 +103,10 @@ public class UserController {
 	@Autowired
 	RecordService recordService;
 
+	//This algorithm find out safest path from given paths
+	//paths will come as a list of lists
+	//api will return the safest path
+	
 	@PostMapping("/check/safestPath")
 	public ResponseEntity<?> safestPathOnly(@RequestBody List<List<RecordDto>> records, HttpServletRequest request) {
 		
@@ -110,6 +119,9 @@ public class UserController {
 		}
 	}
 
+	//user adding real time accidents are going through this api
+	//Record will be added to the databases with user details
+	
 	@PostMapping("/add/accident")
 	public ResponseEntity<?> incidentRecords(@RequestBody RecordDto incidentDto, HttpServletRequest request) {
 //		System.out.println("Point A");
@@ -164,6 +176,9 @@ public class UserController {
 
 	// ----------------------Critical Point(end)-------------------------------//
 
+	//This api returns decrypted user data from token
+	//To verify whether they are accurate use jwt.io site
+	
 	public UserDTO getTokenData(HttpServletRequest request) {
 		request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		AccessToken token = ((KeycloakPrincipal<?>) request.getUserPrincipal()).getKeycloakSecurityContext().getToken();

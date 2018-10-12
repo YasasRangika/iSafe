@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+//This is the table creation of Accident
+
 @Entity
 public class Accident {
 	

@@ -23,6 +23,8 @@ import com.iSafe.repositories.PointsRepository;
 import com.iSafe.repositories.RoadSignsRepository;
 import com.iSafe.repositories.SpeedLimitRepository;
 
+//Handle all the record activities
+
 @Service
 public class RecordService {
 
@@ -39,6 +41,8 @@ public class RecordService {
 	@Autowired
 	private PointsRepository pointsRepository;
 
+	//Safest path finding algorithm
+	
 	public List<SafestPathDto> findSafestPath(List<List<RecordDto>> points) {
 
 		List<SafestPathDto> safePath = new ArrayList<>();
@@ -55,6 +59,10 @@ public class RecordService {
 		}
 		return safePath;
 	}
+	
+	//Retrieve all the static data records in databases when front-end send the all the path point data
+	//Except Accidents
+	//Authentication is essential
 
 	public RecordsOnPathDto pointsOnRoad(List<RecordDto> recordDtos) {
 
@@ -122,6 +130,8 @@ public class RecordService {
 		return recordsOnPathDto;
 	}
 
+	//Above same activity to be done without authentication in admin controller class
+	
 	public RecordsOnPathDto allRecords() {
 
 		RecordsOnPathDto recordsOnPathDto = new RecordsOnPathDto();
@@ -175,6 +185,32 @@ public class RecordService {
 		return recordsOnPathDto;
 	}
 
+	//Method to remove record from data base
+	
+	public int removeRecord(RecordDto recordDto) {
+		int status;
+		if (roadSignsRepository.deleteRecord(recordDto.getLatitude(), recordDto.getLongitude(),
+				recordDto.getSign()) > 0) {
+			status = 201;
+		} else if (blackSpotRepository.deleteRecord(recordDto.getLatitude(), recordDto.getLongitude(),
+				recordDto.getMessage()) > 0) {
+			status = 202;
+		} else if (criticalPointRepository.deleteRecord(recordDto.getLatitude(), recordDto.getLongitude(),
+				recordDto.getMessage()) > 0) {
+			status = 203;
+		} else if (speedLimitRepository.deleteRecord(recordDto.getLatitude(), recordDto.getLongitude(),
+				recordDto.getLimit()) > 0) {
+			status = 204;
+		} else {
+
+			status = 400;
+		}
+		return status;
+	}
+
+	//Confirm or delete road signs
+	//Here is place that gives points to the user
+	
 	public int confirmOrDeleteAccident(RecordDto recordDto, UserDTO userDTO) {
 		if (accidentRepository.findByLatLanNotConfirmed(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
 			Point p = pointsRepository.getPointsOfUser(userDTO.getKid());
@@ -198,23 +234,19 @@ public class RecordService {
 		}
 	}
 
+	//From here all the methods and their tasks are same as the name implies
+	
 	public int confirmOrDeleteRoadSign(RecordDto recordDto, UserDTO userDTO) {
-//		System.out.println("Line 0");
 		if (roadSignsRepository.findByLatLanNotConfirmed(recordDto.getLatitude(), recordDto.getLongitude()) != null) {
-//			System.out.println("Line 1");
+
 			if (recordDto.getIsConfirmed() == 1) {
-//				System.out.println("Line 2");
-//				System.out.println(userDTO.getKid());
 				roadSignsRepository.confirmRecord(recordDto.getLatitude(), recordDto.getLongitude(), userDTO.getKid());
-//				System.out.println(userDTO.getKid());
 				return 200;
 			} else {
-//				System.out.println("Line 3");
 				roadSignsRepository.deleteRecord(recordDto.getLatitude(), recordDto.getLongitude());
 				return 201;
 			}
 		} else {
-//			System.out.println("Line 4");
 			return 208;
 		}
 	}
@@ -435,42 +467,6 @@ public class RecordService {
 		}
 	}
 
-//	public RecordDto updateMap(RecordDto latLngDto) {		//outdated!!!
-//
-//		RecordDto recordsOnPathDto = new RecordDto();
-//		Accident incident = new Accident();
-//		RoadSigns roadSigns = new RoadSigns();
-//		BlackSpot blackSpot = new BlackSpot();
-//		CriticalPoint criticalPoint = new CriticalPoint();
-//		SpeedLimit speedLimit = new SpeedLimit();
-//
-//		if (roadSignsRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
-//				| accidentRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
-//				| blackSpotRepository.findBlackSpot(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
-//				| criticalPointRepository.findCriticalPoint(latLngDto.getLatitude(), latLngDto.getLongitude()) != null
-//				| speedLimitRepository.findSpeedLimitPoint(latLngDto.getLatitude(), latLngDto.getLongitude()) != null) {
-//
-//			recordsOnPathDto.setSelf("Exists");
-//			roadSigns = roadSignsRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude());
-//			recordsOnPathDto.setRoadsigns(roadSigns);
-//			incident = accidentRepository.findByLatLan(latLngDto.getLatitude(), latLngDto.getLongitude());
-//			recordsOnPathDto.setIncident(incident);
-//			blackSpot = blackSpotRepository.findBlackSpot(latLngDto.getLatitude(), latLngDto.getLongitude());
-//			recordsOnPathDto.setBlackSpot(blackSpot);
-//			criticalPoint = criticalPointRepository.findCriticalPoint(latLngDto.getLatitude(),
-//					latLngDto.getLongitude());
-//			recordsOnPathDto.setCriticalPoint(criticalPoint);
-//			speedLimit = speedLimitRepository.findSpeedLimitPoint(latLngDto.getLatitude(), latLngDto.getLongitude());
-//			recordsOnPathDto.setSpeedLimit(speedLimit);
-//
-//			return recordsOnPathDto;
-//		} else {
-//
-//			recordsOnPathDto.setSelf("Error");
-//			return recordsOnPathDto;
-//		}
-//	}
-
 	public List<BlackSpot> getBlackSpot(RecordDto blackSpotDto) {
 
 		List<BlackSpot> blackSpot = new ArrayList<BlackSpot>();
@@ -601,7 +597,7 @@ public class RecordService {
 				.size() == 0) {
 
 			speedLimit.setLatitude(speedLimitDto.getLatitude());
-			speedLimit.setLongitude(speedLimit.getLongitude());
+			speedLimit.setLongitude(speedLimitDto.getLongitude());
 			speedLimit.setSpeedLimit(speedLimitDto.getLimit());
 			speedLimit.setRadius(speedLimitDto.getRadius());
 			speedLimit.setThresholdLimit(speedLimitDto.getThresholdLimit());
@@ -653,24 +649,6 @@ public class RecordService {
 			return speedLimit;
 		}
 	}
-
-//	private double getDistance(LatLng point1, LatLng point2) {
-//        double p = 0.017453292519943295;
-//        double a = 0.5 - Math.cos((point2.latitude - point1.latitude) * p)/2 +
-//                Math.cos(point1.latitude * p) * Math.cos(point2.latitude * p) *
-//                        (1 - Math.cos((point2.longitude - point1.longitude) * p))/2;
-//
-//        return 12.742 * Math.asin(Math.sqrt(a))*1000*1000;
-//    }
-
-//	private double getSignDistance(RecordDto recordDto, RoadSigns roadSigns) {
-//        double p = 0.017453292519943295;
-//        double a = 0.5 - Math.cos((point2.latitude - point1.latitude) * p)/2 +
-//                Math.cos(point1.latitude * p) * Math.cos(point2.latitude * p) *
-//                        (1 - Math.cos((point2.longitude - point1.longitude) * p))/2;
-//
-//        return 12.742 * Math.asin(Math.sqrt(a))*1000*1000;
-//    }
 
 	public List<Accident> getNotConfirmedAccidents() {
 		List<Accident> list = accidentRepository.findAllNotConfirmed();
